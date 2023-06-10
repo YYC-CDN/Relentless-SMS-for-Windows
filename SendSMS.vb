@@ -21,7 +21,6 @@ Module SendSMS
             If confirmDialog2 = DialogResult.Yes Then
                 ' rest of the code
 
-
                 ' Set the minimum and maximum values of the progress bar
                 Dim num_of_messages As Integer = CInt(frmMain.txtNumberofMessages.Text)
                 frmMain.pbAllFunctions.Minimum = 0

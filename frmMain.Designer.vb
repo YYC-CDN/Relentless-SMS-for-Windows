@@ -48,9 +48,9 @@ Partial Class frmMain
         ToolTip1 = New ToolTip(components)
         btnVerifyNumber = New Button()
         btnMailbaitSubmit = New Button()
-        txtVerificationResults = New TextBox()
-        txtOpenTabs = New TextBox()
         Label1 = New Label()
+        txtOpenTabs = New TextBox()
+        txtVerificationResults = New TextBox()
         lblIPAddress = New Label()
         CType(SplitContainer1, ComponentModel.ISupportInitialize).BeginInit()
         SplitContainer1.Panel1.SuspendLayout()
@@ -65,11 +65,12 @@ Partial Class frmMain
         cbImagesCheckbox.CheckState = CheckState.Checked
         cbImagesCheckbox.Font = New Font("Verdana", 11.25F, FontStyle.Regular, GraphicsUnit.Point)
         cbImagesCheckbox.ForeColor = Color.FromArgb(CByte(209), CByte(219), CByte(221))
-        cbImagesCheckbox.Location = New Point(237, 280)
+        cbImagesCheckbox.Location = New Point(234, 282)
         cbImagesCheckbox.Name = "cbImagesCheckbox"
-        cbImagesCheckbox.Size = New Size(263, 22)
+        cbImagesCheckbox.Size = New Size(268, 22)
         cbImagesCheckbox.TabIndex = 1
-        cbImagesCheckbox.Text = "Send Images with Email to SMS"
+        cbImagesCheckbox.Text = "Send Images with Email to SMS."
+        ToolTip1.SetToolTip(cbImagesCheckbox, "Images are stored here- C:\RelentlessSMS\OutgoingImages")
         cbImagesCheckbox.UseVisualStyleBackColor = True
         ' 
         ' phone_number_label
@@ -77,11 +78,11 @@ Partial Class frmMain
         phone_number_label.AutoSize = True
         phone_number_label.Font = New Font("Verdana", 21.75F, FontStyle.Bold Or FontStyle.Italic, GraphicsUnit.Point)
         phone_number_label.ForeColor = Color.FromArgb(CByte(209), CByte(219), CByte(221))
-        phone_number_label.Location = New Point(446, 24)
+        phone_number_label.Location = New Point(370, 24)
         phone_number_label.Name = "phone_number_label"
-        phone_number_label.Size = New Size(272, 35)
+        phone_number_label.Size = New Size(416, 35)
         phone_number_label.TabIndex = 3
-        phone_number_label.Text = "Target Number:"' 
+        phone_number_label.Text = "Target Number or Email:"' 
         ' SplitContainer1
         ' 
         SplitContainer1.Location = New Point(1, 60)
@@ -155,6 +156,7 @@ Partial Class frmMain
         dbSelectCellProvider.Name = "dbSelectCellProvider"
         dbSelectCellProvider.Size = New Size(186, 26)
         dbSelectCellProvider.TabIndex = 3
+        ToolTip1.SetToolTip(dbSelectCellProvider, "This is a list of carriers providing Short Message Service (SMS) transit via SMS gateways.")
         ' 
         ' txtSecondsBetween
         ' 
@@ -274,7 +276,7 @@ Partial Class frmMain
         txtTargetNumber.Font = New Font("Verdana", 15.75F, FontStyle.Bold, GraphicsUnit.Point)
         txtTargetNumber.ForeColor = Color.FromArgb(CByte(209), CByte(219), CByte(221))
         txtTargetNumber.Location = New Point(237, 76)
-        txtTargetNumber.MaxLength = 25
+        txtTargetNumber.MaxLength = 45
         txtTargetNumber.Name = "txtTargetNumber"
         txtTargetNumber.PlaceholderText = "(202) 456-TEST"
         txtTargetNumber.Size = New Size(697, 26)
@@ -344,6 +346,31 @@ Partial Class frmMain
         ToolTip1.SetToolTip(btnMailbaitSubmit, "Opens Browser for Spam Campaign")
         btnMailbaitSubmit.UseVisualStyleBackColor = False
         ' 
+        ' Label1
+        ' 
+        Label1.AutoSize = True
+        Label1.Font = New Font("Verdana", 11.25F, FontStyle.Regular, GraphicsUnit.Point)
+        Label1.ForeColor = Color.FromArgb(CByte(209), CByte(219), CByte(221))
+        Label1.Location = New Point(232, 331)
+        Label1.Name = "Label1"
+        Label1.Size = New Size(321, 18)
+        Label1.TabIndex = 22
+        Label1.Text = "Number of mass email streams (or tabs):"
+        ToolTip1.SetToolTip(Label1, "The more, the better. 50 for 24 hours is great. 75 tabs for 72 hours is brutal. ")
+        ' 
+        ' txtOpenTabs
+        ' 
+        txtOpenTabs.BackColor = Color.FromArgb(CByte(30), CByte(30), CByte(30))
+        txtOpenTabs.BorderStyle = BorderStyle.None
+        txtOpenTabs.Font = New Font("Verdana", 11.25F, FontStyle.Regular, GraphicsUnit.Point)
+        txtOpenTabs.ForeColor = Color.FromArgb(CByte(209), CByte(219), CByte(221))
+        txtOpenTabs.Location = New Point(565, 331)
+        txtOpenTabs.Name = "txtOpenTabs"
+        txtOpenTabs.PlaceholderText = "25 (Default)"
+        txtOpenTabs.Size = New Size(124, 19)
+        txtOpenTabs.TabIndex = 6
+        ToolTip1.SetToolTip(txtOpenTabs, "The more, the better. Don't ever close this window. 50 for 24 hours is great. 75 tabs for 72 hours is brutal. ")
+        ' 
         ' txtVerificationResults
         ' 
         txtVerificationResults.BackColor = Color.FromArgb(CByte(30), CByte(30), CByte(30))
@@ -356,32 +383,6 @@ Partial Class frmMain
         txtVerificationResults.Size = New Size(239, 293)
         txtVerificationResults.TabIndex = 1
         txtVerificationResults.Text = resources.GetString("txtVerificationResults.Text")
-        ' 
-        ' txtOpenTabs
-        ' 
-        txtOpenTabs.BackColor = Color.FromArgb(CByte(30), CByte(30), CByte(30))
-        txtOpenTabs.BorderStyle = BorderStyle.None
-        txtOpenTabs.Enabled = False
-        txtOpenTabs.Font = New Font("Verdana", 11.25F, FontStyle.Regular, GraphicsUnit.Point)
-        txtOpenTabs.ForeColor = Color.FromArgb(CByte(209), CByte(219), CByte(221))
-        txtOpenTabs.Location = New Point(490, 330)
-        txtOpenTabs.Name = "txtOpenTabs"
-        txtOpenTabs.PlaceholderText = "25"
-        txtOpenTabs.Size = New Size(44, 19)
-        txtOpenTabs.TabIndex = 6
-        txtOpenTabs.Visible = False
-        ' 
-        ' Label1
-        ' 
-        Label1.AutoSize = True
-        Label1.Font = New Font("Verdana", 11.25F, FontStyle.Regular, GraphicsUnit.Point)
-        Label1.ForeColor = Color.FromArgb(CByte(209), CByte(219), CByte(221))
-        Label1.Location = New Point(232, 330)
-        Label1.Name = "Label1"
-        Label1.Size = New Size(249, 18)
-        Label1.TabIndex = 22
-        Label1.Text = "Number of mass email streams:"
-        Label1.Visible = False
         ' 
         ' lblIPAddress
         ' 

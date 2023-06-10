@@ -50,6 +50,7 @@ Partial Class frmSettings
         txtEmailPassword = New TextBox()
         GroupBox1 = New GroupBox()
         Label10 = New Label()
+        Label11 = New Label()
         GroupBox1.SuspendLayout()
         SuspendLayout()
         ' 
@@ -318,12 +319,21 @@ Partial Class frmSettings
         Label10.Size = New Size(0, 17)
         Label10.TabIndex = 101
         ' 
+        ' Label11
+        ' 
+        Label11.AutoSize = True
+        Label11.Location = New Point(10, 460)
+        Label11.Name = "Label11"
+        Label11.Size = New Size(567, 15)
+        Label11.TabIndex = 101
+        Label11.Text = "Enter SMTP once, then as many email addresses as you can, they will be added to the list it will email from."' 
         ' frmSettings
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(758, 503)
         ControlBox = False
+        Controls.Add(Label11)
         Controls.Add(LinkLabel2)
         Controls.Add(LinkLabel1)
         Controls.Add(btnIPQualityScore)
@@ -377,4 +387,5 @@ Partial Class frmSettings
     Friend WithEvents txtEmailPassword As TextBox
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents Label10 As Label
+    Friend WithEvents Label11 As Label
 End Class

@@ -7,7 +7,7 @@ Imports System.Net.Mail
 
 Module SendEmailToSMS
 
-    Public Sub sendemailtosms()
+    Public Async Sub sendemailtosms()
 
         ' Show the hourglass cursor
         ' Cursor.Current = Cursors.WaitCursor
@@ -23,16 +23,18 @@ Module SendEmailToSMS
         ' Read the email addresses and passwords from the file
         Dim email_list As New List(Of Dictionary(Of String, String))
         For Each line As String In IO.File.ReadAllLines("C:\RelentlessSMS\EmailInformation\EmailAddress.txt")
-            Dim parts As String() = line.Split(" "c)
-            If parts.Length >= 2 Then
-                email_list.Add(New Dictionary(Of String, String) From {
-            {"smtp_server", smtpConfig(0)},
-            {"smtp_port", smtpConfig(1)},
-            {"email", parts(0)},
-            {"password", parts(1)}
-        })
-            Else
-                ' handle invalid line format
+            If Not line.StartsWith("'") Then ' Ignore lines that start with a single quote
+                Dim parts As String() = line.Split(" "c)
+                If parts.Length >= 2 Then
+                    email_list.Add(New Dictionary(Of String, String) From {
+        {"smtp_server", smtpConfig(0)},
+        {"smtp_port", smtpConfig(1)},
+        {"email", parts(0)},
+        {"password", parts(1)}
+    })
+                Else
+                    ' handle invalid line format
+                End If
             End If
         Next
 
@@ -50,8 +52,22 @@ Module SendEmailToSMS
         ' Get the list of files in the folder
         Dim files As String() = System.IO.Directory.GetFiles(folder_path)
 
-        ' Read the lines from the AntiCrimeEmail.txt file
-        Dim message_lines As String() = System.IO.File.ReadAllLines("C:\RelentlessSMS\AntiCrimeMessages\AntiCrimeEnglish.txt")
+        ' Set the message file path based on selected language
+        Dim message_file_path As String
+        Select Case frmMain.dbOutgoingLanguage.Text
+            Case "English (Default)"
+                message_file_path = "C:\RelentlessSMS\AntiCrimeMessages\AntiCrimeEnglish.txt"
+            Case "Chinese"
+                message_file_path = "C:\RelentlessSMS\AntiCrimeMessages\AntiCrimeChinese.txt"
+            Case "Hindi"
+                message_file_path = "C:\RelentlessSMS\AntiCrimeMessages\AntiCrimeHindi.txt"
+            Case Else
+                MessageBox.Show("Invalid language selected.")
+                Return
+        End Select
+
+        ' Read the lines from the email message file
+        Dim message_lines As String() = System.IO.File.ReadAllLines(message_file_path)
 
         ' Counter variable for the index of the current image to be attached
         Dim current_image_index As Integer = 0
@@ -86,27 +102,32 @@ Module SendEmailToSMS
                 If frmMain.cbImagesCheckbox.Checked Then
                     Dim attachment As New Attachment(files(current_image_index))
                     mail.Attachments.Add(attachment)
-
                     ' Increment the counter variable for the index of the current image
                     current_image_index = (current_image_index + 1) Mod files.Length
                 End If
-
-                client.Send(mail)
+                Try
+                    ' Precaution only
+                    client.Send(mail)
+                    ''Await Task.Run(Sub() sendemailtosms())
+                Catch ex As Exception
+                    ' MessageBox.Show("Not sure really what's up here except the message didn't get sent. Most likely an email issue ", "Unknown", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                End Try
 
                 ' Update the outgoing messages textbox with the current message
                 frmMain.txtOutgoingMessages.AppendText(message & Environment.NewLine)
             Catch ex As Exception
-                MessageBox.Show("                                    " & ex.Message)
+                'MessageBox.Show("                                    " & ex.Message)
             End Try
-
             ' Increment progress bar value
             frmMain.pbAllFunctions.Increment(1)
         Next
         ' Reset the progress bar value
         frmMain.pbAllFunctions.Value = 0
-        ' Show the success message
-        ' MessageBox.Show("Mail Sent.         ", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
     End Sub
+
+
+
+
 
 End Module

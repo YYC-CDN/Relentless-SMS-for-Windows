@@ -7,12 +7,18 @@
 Option Explicit On
 Imports System.IO
 Imports System.Net
+Imports System.Net.Http
+Imports System.Text
 Imports System.Text.RegularExpressions
-Imports Microsoft.Web
 Imports Newtonsoft.Json.Linq
+Imports SHDocVw
 Imports Microsoft.Web.WebView2.Core
+Imports Microsoft.Web
+Imports System.Threading
 Imports Microsoft.Web.WebView2.WinForms
-
+Imports System.Diagnostics.Metrics
+Imports Newtonsoft.Json.Serialization
+Imports System.Diagnostics
 
 Public Class frmMain
     Private imageFiles As String()
@@ -20,7 +26,7 @@ Public Class frmMain
 
     Private Sub FrmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        Me.Text = "Relentless SMS V3.380 BETA"
+        Me.Text = " V3.500 BETA  | FOR GOVERNMENT USE ONLY | NON GOV'T USE PROHIBITED "
 
         x.startup()
 
@@ -160,12 +166,7 @@ Public Class frmMain
                 If verifyTargetNumber = DialogResult.Yes Then
                     ' Send the email message as SMS.
                     Dim selected_provider As String = dbSelectCellProvider.SelectedItem.ToString()
-                    Try ' Windows 7 error 
-                        SendEmailToSMS.sendemailtosms()
-                    Catch ex As Exception
-                        MessageBox.Show("Divide by Zero error Windows 7,", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                    End Try
-
+                    SendEmailToSMS.sendemailtosms()
                 End If
             Else
                 ' Notify the user to enter a target number.
@@ -173,7 +174,7 @@ Public Class frmMain
             End If
         Else
             ' Notify the user to select a cellular provider.
-            MessageBox.Show("Please Select a cellular provider.")
+            MessageBox.Show("Please select a cellular provider.")
         End If
 
     End Sub
@@ -215,7 +216,6 @@ Public Class frmMain
     {"Bell Canada", "@txt.bell.ca"},
     {"Rogers Wireless", "@sms.rogers.com"},
     {"Telus", "@msg.telus.com"},
-    {"Onvoy", "@vtext.com"},
     {"MetroPCS", "@mymetropcs.com"},
     {"Cricket Wireless", "@mms.cricketwireless.net"},
     {"U.S. Cellular", "@email.uscc.net"},
@@ -225,29 +225,13 @@ Public Class frmMain
     {"Koodo Mobile", "@msg.koodomobile.com"},
     {"SaskTel Mobility", "@sms.sasktel.com"},
     {"MTS Mobility", "@text.mtsmobility.com"},
-    {"Wind Mobile", "@txt.windmobile.ca"},
-    {"Chatr Mobile", "@chatrwireless.com"},
-    {"Freedom Mobile", "@txt.freedommobile.ca"},
-    {"Public Mobile", "@msg.telus.com"},
-    {"Videotron Mobile", "@mobiletxt.ca"},
-    {"Eastlink", "@sms.eastlink.ca"},
-    {"Tbaytel", "@tbayteltxt.net"},
-    {"NorthernTel Mobility", "@sms.northerntelmobility.com"},
-    {"PC Mobile", "@mobiletxt.ca"},
-    {"Cityfone", "@txt.cityfone.net"},
-    {"Zoomer Wireless", "@sms.zoomerwireless.ca"},
-    {"SimplyConnect", "@mobiletxt.ca"},
-    {"Lucky Mobile", "@txt.luckymobile.ca"},
-    {"7-Eleven SpeakOut", "@sms.speakoutwireless.ca"},
-    {"Petro-Canada Mobility", "@mobiletxt.ca"}
+    {"Wind Mobile", "@txt.windmobile.ca"}
 }
-
     ' Define the provider options dictionary
     Dim language_options As New Dictionary(Of String, String) From {
     {"English (Default)", "en"},
     {"Chinese", "zh"},
-    {"Hindi", "hi"},
-    {"Nigerian", "yo"}
+    {"Hindi", "hi"}
     }
     '{"Punjabi", "pa"},
     '{"Russian", "ru"},
@@ -268,10 +252,29 @@ Public Class frmMain
     End Sub
 
     Private Sub btnSendSMS_Click_1(sender As Object, e As EventArgs) Handles btnSendSMS.Click
+        ' Check if the target number textbox is empty
+        If String.IsNullOrEmpty(txtTargetNumber.Text.Trim()) Then
+            MessageBox.Show("Please enter a target number.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            Return
+        End If
 
-        ' Sent over on 03/21/23
-        SendSMS.SendSMS()
+        Dim message As String
+        Dim boldFont As New Font("Arial", 11, FontStyle.Bold)
+        Dim confirmDialog As DialogResult = MessageBox.Show("Is " & txtTargetNumber.Text & " the correct target number with " & txtOpenTabs.Text & " open MailBait tabs?" & vbCrLf & vbCrLf, "Confirm Target Number and Number of Open Tabs", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
 
+        If confirmDialog = DialogResult.Yes Then
+            message = "Are you sure you want to proceed with sending messages to " & txtTargetNumber.Text & "? This will open our own browser with " & txtOpenTabs.Text & "" & vbCrLf & vbCrLf
+            Dim confirmDialog2 As DialogResult = MessageBox.Show(message, "Confirm Message Sending", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
+
+            If confirmDialog2 = DialogResult.Yes Then
+                ' rest of the code
+
+
+                ' Sent over on 03/21/23
+                SendSMS.SendSMS()
+
+            End If
+        End If
 
     End Sub
 
@@ -352,7 +355,6 @@ Public Class frmMain
     Private tabsToOpen As Integer = 0
 
 
-
     Private Async Sub btnMailbaitSubmit_Click(sender As Object, e As EventArgs) Handles btnMailbaitSubmit.Click
 
 
@@ -420,10 +422,7 @@ Public Class frmMain
 
     End Sub
 
-
-
-
-
+    ' End of the method
 
 End Class
 
@@ -431,6 +430,31 @@ End Class
 
 
 
+'Imports System.Diagnostics
+
+'Private Sub btnMailbaitSubmit_Click(sender As Object, e As EventArgs) Handles btnMailbaitSubmit.Click
+'    ' Start the progress bar animation
+'    pbAllFunctions.Style = ProgressBarStyle.Marquee
+'    pbAllFunctions.MarqueeAnimationSpeed = 50
+
+'    txtOutgoingMessages.Text = "Currently submitting targets information to hundreds of spam outlets. Do not close."
+
+'    ' Validate email address
+'    If String.IsNullOrEmpty(txtTargetNumber.Text) OrElse Not txtTargetNumber.Text.Contains("@") Then
+'        MessageBox.Show("Please enter a valid target email address and cellular provider address.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+'        Return
+'    End If
+
+'    ' Set the number of tabs to open
+'    tabsToOpen = Integer.Parse(txtOpenTabs.Text)
+
+'    ' Open multiple tabs
+'    For i As Integer = 1 To tabsToOpen
+'        Dim url As String = "http://mailbait.info/run.html"
+'        Dim psi As New ProcessStartInfo(url) With {.UseShellExecute = True}
+'        Process.Start(psi)
+'    Next
+'End Sub
 
 
 

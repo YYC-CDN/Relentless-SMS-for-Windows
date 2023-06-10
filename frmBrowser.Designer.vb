@@ -32,12 +32,6 @@ Partial Class frmBrowser
         FileToolStripMenuItem = New ToolStripMenuItem()
         CloseToolStripMenuItem = New ToolStripMenuItem()
         ToolStrip1 = New ToolStrip()
-        NewToolStripButton = New ToolStripButton()
-        OpenToolStripButton = New ToolStripButton()
-        toolStripSeparator = New ToolStripSeparator()
-        CutToolStripButton = New ToolStripButton()
-        toolStripSeparator1 = New ToolStripSeparator()
-        HelpToolStripButton = New ToolStripButton()
         ToolStripURL = New ToolStripComboBox()
         StatusStrip.SuspendLayout()
         CType(WebView21, ComponentModel.ISupportInitialize).BeginInit()
@@ -51,28 +45,28 @@ Partial Class frmBrowser
         TabControl1.Location = New Point(0, 52)
         TabControl1.Name = "TabControl1"
         TabControl1.SelectedIndex = 0
-        TabControl1.Size = New Size(826, 392)
+        TabControl1.Size = New Size(866, 449)
         TabControl1.TabIndex = 0
         ' 
         ' StatusStrip
         ' 
         StatusStrip.Items.AddRange(New ToolStripItem() {StatusStripProgressBar, StatusStripStatusText})
-        StatusStrip.Location = New Point(0, 447)
+        StatusStrip.Location = New Point(0, 504)
         StatusStrip.Name = "StatusStrip"
         StatusStrip.Padding = New Padding(1, 0, 16, 0)
-        StatusStrip.Size = New Size(826, 22)
+        StatusStrip.Size = New Size(866, 22)
         StatusStrip.TabIndex = 1
         StatusStrip.Text = "StatusStrip1"' 
         ' StatusStripProgressBar
         ' 
         StatusStripProgressBar.Name = "StatusStripProgressBar"
-        StatusStripProgressBar.Size = New Size(100, 16)
+        StatusStripProgressBar.Size = New Size(150, 16)
         ' 
         ' StatusStripStatusText
         ' 
         StatusStripStatusText.Name = "StatusStripStatusText"
-        StatusStripStatusText.Size = New Size(59, 17)
-        StatusStripStatusText.Text = "Loading..."' 
+        StatusStripStatusText.Size = New Size(581, 17)
+        StatusStripStatusText.Text = "Don't ever close this window. The more tabs, the better. 50 for 24 hours is great. 75 tabs for 72 hours is brutal. "' 
         ' WebView21
         ' 
         WebView21.AllowExternalDrop = True
@@ -89,7 +83,7 @@ Partial Class frmBrowser
         MenuStrip1.Items.AddRange(New ToolStripItem() {FileToolStripMenuItem, CloseToolStripMenuItem})
         MenuStrip1.Location = New Point(0, 0)
         MenuStrip1.Name = "MenuStrip1"
-        MenuStrip1.Size = New Size(826, 24)
+        MenuStrip1.Size = New Size(866, 24)
         MenuStrip1.TabIndex = 4
         MenuStrip1.Text = "MenuStrip1"' 
         ' FileToolStripMenuItem
@@ -105,62 +99,23 @@ Partial Class frmBrowser
         CloseToolStripMenuItem.Text = "Close"' 
         ' ToolStrip1
         ' 
-        ToolStrip1.Items.AddRange(New ToolStripItem() {NewToolStripButton, OpenToolStripButton, toolStripSeparator, CutToolStripButton, toolStripSeparator1, HelpToolStripButton, ToolStripURL})
+        ToolStrip1.Items.AddRange(New ToolStripItem() {ToolStripURL})
         ToolStrip1.Location = New Point(0, 24)
         ToolStrip1.Name = "ToolStrip1"
-        ToolStrip1.Size = New Size(826, 25)
+        ToolStrip1.Size = New Size(866, 25)
         ToolStrip1.TabIndex = 5
         ToolStrip1.Text = "ToolStrip1"' 
-        ' NewToolStripButton
-        ' 
-        NewToolStripButton.Image = My.Resources.Resources.icons8_back_arrow_50
-        NewToolStripButton.ImageTransparentColor = Color.Magenta
-        NewToolStripButton.Name = "NewToolStripButton"
-        NewToolStripButton.Size = New Size(52, 22)
-        NewToolStripButton.Text = "&Back"' 
-        ' OpenToolStripButton
-        ' 
-        OpenToolStripButton.Image = My.Resources.Resources.icons8_forward_button_50
-        OpenToolStripButton.ImageTransparentColor = Color.Magenta
-        OpenToolStripButton.Name = "OpenToolStripButton"
-        OpenToolStripButton.Size = New Size(70, 22)
-        OpenToolStripButton.Text = "&Forward"' 
-        ' toolStripSeparator
-        ' 
-        toolStripSeparator.Name = "toolStripSeparator"
-        toolStripSeparator.Size = New Size(6, 25)
-        ' 
-        ' CutToolStripButton
-        ' 
-        CutToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image
-        CutToolStripButton.Image = My.Resources.Resources.icons8_home_50
-        CutToolStripButton.ImageTransparentColor = Color.Magenta
-        CutToolStripButton.Name = "CutToolStripButton"
-        CutToolStripButton.Size = New Size(23, 22)
-        CutToolStripButton.Text = "C&ut"' 
-        ' toolStripSeparator1
-        ' 
-        toolStripSeparator1.Name = "toolStripSeparator1"
-        toolStripSeparator1.Size = New Size(6, 25)
-        ' 
-        ' HelpToolStripButton
-        ' 
-        HelpToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image
-        HelpToolStripButton.Image = CType(resources.GetObject("HelpToolStripButton.Image"), Image)
-        HelpToolStripButton.ImageTransparentColor = Color.Magenta
-        HelpToolStripButton.Name = "HelpToolStripButton"
-        HelpToolStripButton.Size = New Size(23, 22)
-        HelpToolStripButton.Text = "He&lp"' 
         ' ToolStripURL
         ' 
+        ToolStripURL.BackColor = SystemColors.AppWorkspace
         ToolStripURL.Name = "ToolStripURL"
         ToolStripURL.Size = New Size(500, 25)
-        ' 
+        ToolStripURL.Text = "http://mailbait.info"' 
         ' frmBrowser
         ' 
         AutoScaleDimensions = New SizeF(8F, 16F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(826, 469)
+        ClientSize = New Size(866, 526)
         Controls.Add(ToolStrip1)
         Controls.Add(StatusStrip)
         Controls.Add(MenuStrip1)
@@ -191,12 +146,6 @@ Partial Class frmBrowser
     Friend WithEvents MenuStrip1 As MenuStrip
     Friend WithEvents CloseToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ToolStrip1 As ToolStrip
-    Friend WithEvents NewToolStripButton As ToolStripButton
-    Friend WithEvents OpenToolStripButton As ToolStripButton
-    Friend WithEvents toolStripSeparator As ToolStripSeparator
-    Friend WithEvents CutToolStripButton As ToolStripButton
-    Friend WithEvents toolStripSeparator1 As ToolStripSeparator
-    Friend WithEvents HelpToolStripButton As ToolStripButton
     Friend WithEvents FileToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ToolStripURL As ToolStripComboBox
 End Class

@@ -111,16 +111,11 @@ Module x
 
     Public Sub buildfiles()
 
-
-
-
-
         Dim antiCrimeFolder As String = "C:\RelentlessSMS\AntiCrimeMessages"
         Dim antiCrimeEnglishFile As String = "C:\RelentlessSMS\AntiCrimeMessages\AntiCrimeEnglish.txt"
         Dim antiCrimeChineseFile As String = "C:\RelentlessSMS\AntiCrimeMessages\AntiCrimeChinese.txt"
         Dim antiCrimeHindiFile As String = "C:\RelentlessSMS\AntiCrimeMessages\AntiCrimeHindi.txt"
         Dim antiCrimeNigerianFile As String = "C:\RelentlessSMS\AntiCrimeMessages\AntiCrimeNigerian.txt"
-
 
         ' Check if the folder exists, if not, create it
         If Not Directory.Exists(antiCrimeFolder) Then
