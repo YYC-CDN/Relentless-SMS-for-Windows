@@ -20,7 +20,7 @@ Public Class frmMain
 
     Private Sub FrmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        Me.Text = "Relentless SMS V3.380 BETA"
+        Me.Text = "Relentless SMS V3.395 BETA"
 
         x.startup()
 
