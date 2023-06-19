@@ -1,6 +1,7 @@
 ﻿
 '03/21/23
 
+Imports System.Configuration
 Imports System.IO
 
 Module x
@@ -77,9 +78,14 @@ Module x
             File.Create("C:\RelentlessSMS\APIs\TextNowAPI.txt").Dispose()
         End If
 
-        'Create EmailAddresses.txt if it does not exist
+        'Create ReadMe.txt if it does not exist
         If Not File.Exists("C:\RelentlessSMS\ReadMe.txt") Then
             File.Create("C:\RelentlessSMS\ReadMe.txt").Dispose()
+        End If
+
+        'Create Providers.txt if it does not exist
+        If Not File.Exists("C:\RelentlessSMS\Providers.txt") Then
+            File.Create("C:\RelentlessSMS\Providers.txt").Dispose()
         End If
 
         Using writer As New StreamWriter(Path.Combine(directoryPath, "ReadMe.txt"))
@@ -100,8 +106,14 @@ Module x
     "If the target number is a cellular carrier like T-Mobile, AT&T, or Telus, sending messages is best done through Email to SMS. Users can append their phone number with @provider.net to send an email to the subscriber's text notification. This method doesn't cost anything because it's email-based." & vbCrLf & vbCrLf &
     "For Email to SMS, the key is to have as many email addresses as possible. Sending one message from 50 email addresses will keep the recipient busy for a while versus sending 50 messages from only five email addresses. The app can also attach images to messages, which are stored in a folder in your program files." & vbCrLf & vbCrLf &
     "Finally, it's important to remember to use this app ethically and responsibly. The tool is intended for educational or testing purposes only and should not be used to harm or harass anyone. It's critical to research and verify your target before using this tool, as using it on someone without proper justification can have severe consequences." & vbCrLf & vbCrLf)
-
         End Using
+
+
+        'Using writer As New StreamWriter(Path.Combine(directoryPath, "Providers.txt"))
+        '    writer.WriteLine("Verizon", "@vtext.com")
+        '    writer.WriteLine("AT&T", "@txt.att.net")
+        '    writer.WriteLine("Sprint", "@messaging.sprintpcs.com")
+        'End Using
 
     End Sub
 
@@ -116,6 +128,8 @@ Module x
         Dim antiCrimeChineseFile As String = "C:\RelentlessSMS\AntiCrimeMessages\AntiCrimeChinese.txt"
         Dim antiCrimeHindiFile As String = "C:\RelentlessSMS\AntiCrimeMessages\AntiCrimeHindi.txt"
         Dim antiCrimeNigerianFile As String = "C:\RelentlessSMS\AntiCrimeMessages\AntiCrimeNigerian.txt"
+
+        Dim CellProvidersFile As String = "C:\RelentlessSMS\Providers.txt"
 
         ' Check if the folder exists, if not, create it
         If Not Directory.Exists(antiCrimeFolder) Then
@@ -367,8 +381,16 @@ Module x
         End If
 
 
+        ' Check if the Providers.txt file exists, if not, create it and write the content
 
+        If Not File.Exists(CellProvidersFile) Then
+            Using writer As StreamWriter = File.CreateText(CellProvidersFile)
 
+                writer.WriteLine("Verizon")
+                writer.WriteLine("AT&T")
+                writer.WriteLine("Sprint")
+            End Using
+        End If
 
 
 
@@ -386,26 +408,24 @@ End Module
 
 
 
+'' Define the provider options dictionary
 'Dim provider_options As New Dictionary(Of String, String) From {
-'    {"Assurance Wireless", "@vmobl.com"},
-'    {"C Spire Wireless", "@cspire1.com"},
-'    {"Chariton Valley Wireless", "@sms.cvalley.net"},
-'    {"Consumer Cellular", "@txt.att.net"},
-'    {"CREDO Mobile", "@messaging.sprintpcs.com"},
-'    {"GCI", "@mobile.gci.net"},
-'    {"GoSmart Mobile", "@msg.gosmartmobile.com"},
-'    {"GreatCall", "@vtext.com"},
-'    {"H2O Wireless", "@mms.att.net"},
-'    {"Jitterbug", "@vtext.com"},
-'    {"Lycamobile", "@mail2txt.com"},
-'    {"Net10 Wireless", "@mms.att.net"},
-'    {"Page Plus Cellular", "@vtext.com"},
-'    {"Pioneer Cellular", "@zsend.com"},
-'    {"PureTalk USA", "@sms.puretalkusa.com"},
-'    {"Red Pocket Mobile", "@txt.att.net"},
-'    {"Republic Wireless", "@text.republicwireless.com"},
-'    {"Simple Mobile", "@smtext.com"},
-'    {"Straight Talk", "@vtext.com"},
-'    {"TracFone", "@mmst5.tracfone.com"}
-'}
-
+'    {"Verizon", "@vtext.com"},
+'    {"AT&T", "@txt.att.net"},
+'    {"T-Mobile", "@tmomail.net"},
+'    {"Sprint", "@messaging.sprintpcs.com"},
+'    {"Google Fi", "@msg.fi.google.com"},
+'    {"Aerial Communications", "@sms.aerialink.net"},
+'    {"Bell Canada", "@txt.bell.ca"},
+'    {"Rogers Wireless", "@sms.rogers.com"},
+'    {"Telus", "@msg.telus.com"},
+'    {"MetroPCS", "@mymetropcs.com"},
+'    {"Cricket Wireless", "@mms.cricketwireless.net"},
+'    {"U.S. Cellular", "@email.uscc.net"},
+'    {"Virgin Mobile", "@vmobl.com"},
+'    {"Boost Mobile", "@sms.myboostmobile.com"},
+'    {"Fido", "@fido.ca"},
+'    {"Koodo Mobile", "@msg.koodomobile.com"},
+'    {"SaskTel Mobility", "@sms.sasktel.com"},
+'    {"MTS Mobility", "@text.mtsmobility.com"},
+'    {"Wind Mobile", "@txt.windmobile.ca"}

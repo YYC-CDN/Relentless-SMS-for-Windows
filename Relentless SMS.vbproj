@@ -11,7 +11,7 @@
     <Title>Relentless SMS</Title>
     <Version></Version>
     <Company>Damage Inc.</Company>
-    <Description>Targeted SMS Application</Description>
+    <Description>Targeted SMS Application </Description>
     <Copyright>2023</Copyright>
     <AssemblyVersion>3.1.0.0</AssemblyVersion>
     <FileVersion>3.1.0.0</FileVersion>
@@ -20,12 +20,12 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>True</Prefer32Bit>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>True</Prefer32Bit>
   </PropertyGroup>
 

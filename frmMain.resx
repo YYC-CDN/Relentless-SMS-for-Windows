@@ -249,7 +249,17 @@ City: LANGDON
 Zip Code: T0J3H
 Leaked: False
 Spammer: False
-Do Not Call: False</value>
+Do Not Call: False
+Associated emails found: TBD
+Valid: False
+Disposable: True
+Deliverability: low
+Catch All: False
+Leaked: False
+Suspect: False
+SMTP Score: 0
+Overall Score: 0
+</value>
   </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>45</value>

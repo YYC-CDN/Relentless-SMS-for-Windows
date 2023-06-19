@@ -2,10 +2,15 @@
 
 Imports System.Net
 Imports System.Net.Mail
+Imports System.Threading.Tasks
 
 
 
 Module SendEmailToSMS
+
+    Public Sub RunSendEmailToSMSOnThread()
+        Task.Run(Sub() sendemailtosms())
+    End Sub
 
     Public Async Sub sendemailtosms()
 
@@ -107,17 +112,27 @@ Module SendEmailToSMS
                 End If
                 Try
                     ' Precaution only
-                    client.Send(mail)
+                    'client.Send(mail) ' when this is enabled, the victim window works fine.
+                    Await client.SendMailAsync(mail) ' when this is enabled, the victim window isn't working. 
+
                     ''Await Task.Run(Sub() sendemailtosms())
                 Catch ex As Exception
                     ' MessageBox.Show("Not sure really what's up here except the message didn't get sent. Most likely an email issue ", "Unknown", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End Try
 
-                ' Update the outgoing messages textbox with the current message
-                frmMain.txtOutgoingMessages.AppendText(message & Environment.NewLine)
+
             Catch ex As Exception
-                'MessageBox.Show("                                    " & ex.Message)
+                'MessageBox.Show("  " & ex.Message)
             End Try
+
+
+            ' Update the outgoing messages textbox with the current message
+            ' Update the outgoing messages textbox with the current message
+            frmMain.BeginInvoke(Sub() frmMain.txtOutgoingMessages.AppendText(message & Environment.NewLine))
+
+            'frmMain.Invoke(Sub() frmMain.txtOutgoingMessages.AppendText(message & Environment.NewLine))
+
+
             ' Increment progress bar value
             frmMain.pbAllFunctions.Increment(1)
         Next

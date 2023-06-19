@@ -51,6 +51,7 @@ Partial Class frmSettings
         GroupBox1 = New GroupBox()
         Label10 = New Label()
         Label11 = New Label()
+        btnAPIcredit = New Button()
         GroupBox1.SuspendLayout()
         SuspendLayout()
         ' 
@@ -98,7 +99,7 @@ Partial Class frmSettings
         btnAddTextNowAPI.Name = "btnAddTextNowAPI"
         btnAddTextNowAPI.Size = New Size(198, 39)
         btnAddTextNowAPI.TabIndex = 1
-        btnAddTextNowAPI.Text = "Add API"
+        btnAddTextNowAPI.Text = "Add Text Message API"
         btnAddTextNowAPI.UseVisualStyleBackColor = True
         ' 
         ' lblLinkHome
@@ -147,7 +148,7 @@ Partial Class frmSettings
         btnIPQualityScore.Name = "btnIPQualityScore"
         btnIPQualityScore.Size = New Size(268, 39)
         btnIPQualityScore.TabIndex = 3
-        btnIPQualityScore.Text = "Add API for Number Verification"
+        btnIPQualityScore.Text = "Add API for Number and Email Verification"
         btnIPQualityScore.UseVisualStyleBackColor = True
         ' 
         ' Label4
@@ -156,14 +157,15 @@ Partial Class frmSettings
         Label4.Font = New Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
         Label4.Location = New Point(7, 177)
         Label4.Name = "Label4"
-        Label4.Size = New Size(396, 17)
+        Label4.Size = New Size(523, 17)
         Label4.TabIndex = 100
-        Label4.Text = "API for IP Quality Score to retrieve and validate phone numbers"' 
+        Label4.Text = "API for IP Quality Score to retrieve and validate phone numbers and email addresses"' 
         ' txtIPQualityScore
         ' 
         txtIPQualityScore.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
         txtIPQualityScore.Location = New Point(51, 210)
         txtIPQualityScore.Name = "txtIPQualityScore"
+        txtIPQualityScore.PlaceholderText = "ZWm5zjhIU3aV18lRwnDxe6WKlYAxsCrX_EXAMPLE"
         txtIPQualityScore.Size = New Size(694, 25)
         txtIPQualityScore.TabIndex = 2
         ' 
@@ -307,7 +309,7 @@ Partial Class frmSettings
         GroupBox1.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
         GroupBox1.Location = New Point(7, 310)
         GroupBox1.Name = "GroupBox1"
-        GroupBox1.Size = New Size(720, 136)
+        GroupBox1.Size = New Size(738, 136)
         GroupBox1.TabIndex = 37
         GroupBox1.TabStop = False
         GroupBox1.Text = "Email Information"' 
@@ -327,12 +329,23 @@ Partial Class frmSettings
         Label11.Size = New Size(567, 15)
         Label11.TabIndex = 101
         Label11.Text = "Enter SMTP once, then as many email addresses as you can, they will be added to the list it will email from."' 
+        ' btnAPIcredit
+        ' 
+        btnAPIcredit.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
+        btnAPIcredit.Location = New Point(205, 241)
+        btnAPIcredit.Name = "btnAPIcredit"
+        btnAPIcredit.Size = New Size(268, 39)
+        btnAPIcredit.TabIndex = 102
+        btnAPIcredit.Text = "Check API Credit Usage"
+        btnAPIcredit.UseVisualStyleBackColor = True
+        ' 
         ' frmSettings
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         ClientSize = New Size(758, 503)
         ControlBox = False
+        Controls.Add(btnAPIcredit)
         Controls.Add(Label11)
         Controls.Add(LinkLabel2)
         Controls.Add(LinkLabel1)
@@ -388,4 +401,5 @@ Partial Class frmSettings
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents Label10 As Label
     Friend WithEvents Label11 As Label
+    Friend WithEvents btnAPIcredit As Button
 End Class

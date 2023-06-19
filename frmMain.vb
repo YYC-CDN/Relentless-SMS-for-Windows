@@ -6,6 +6,7 @@
 
 Option Explicit On
 Imports System.IO
+Imports System
 Imports System.Net
 Imports System.Net.Http
 Imports System.Text
@@ -20,13 +21,14 @@ Imports System.Diagnostics.Metrics
 Imports Newtonsoft.Json.Serialization
 Imports System.Diagnostics
 
+
 Public Class frmMain
     Private imageFiles As String()
     Private random As New Random()
 
     Private Sub FrmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        Me.Text = " V3.500 BETA  | FOR GOVERNMENT USE ONLY | NON GOV'T USE PROHIBITED "
+        Me.Text = " V3.6.00 BETA  | FOR GOVERNMENT USE ONLY | NON GOV'T USE PROHIBITED "
 
         x.startup()
 
@@ -47,7 +49,6 @@ Public Class frmMain
         'Load default API from file
         Dim default_api As String = LoadAPI()
 
-
         ' Populate the dropdown box with the provider options
         dbSelectCellProvider.Text = "Select Carrier"
         'dbSelectCellProvider.Items.Add("Select Carrier")
@@ -67,20 +68,25 @@ Public Class frmMain
         'lblMessRemain.ForeColor = Color.FromArgb(209, 219, 221)
         'lblBalance.ForeColor = Color.FromArgb(209, 219, 221)
         txtSecondsBetween.ForeColor = Color.FromArgb(209, 219, 221)
-
         txtVerificationResults.Text = "We want to emphasize that using this tool ethically and responsibly is of utmost importance. It is critical to research and verify your target before using this tool, as using it on someone without proper justification can have severe consequences. This tool is intended for educational or testing purposes only and should not be used to harm or harass anyone. This service is provided 'as is' and with no express or implied warranties, endorsements, or associations. We assume no responsibility for any damages or losses resulting from your use of this service. Let's always use technology with integrity and responsibility."
         'txtVerificationResults.Font = New Font("Verdana", 9)
-
         txtOpenTabs.Text = "25"
+
 
         Dim ipAddress As String = GetIPAddress()
         lblIPAddress.Text = ipAddress
 
+        ' Disable the buttons on form load
+        btnSendSMS.Enabled = False
+        btnEmailToSMS.Enabled = False
+        btnMailbaitSubmit.Enabled = False
+        btnVerifyNumber.Enabled = False
+        btnEmailValidation.Enabled = False
+
+
 
 
     End Sub
-
-
 
     Private Function GetIPAddress() As String
         Dim hostName As String = System.Net.Dns.GetHostName()
@@ -88,11 +94,6 @@ Public Class frmMain
         Dim ipAddress As String = ipEntry.AddressList.FirstOrDefault(Function(a) a.AddressFamily = System.Net.Sockets.AddressFamily.InterNetwork).ToString()
         Return ipAddress
     End Function
-
-
-
-
-
 
     Private Function LoadAPI() As String
         'Read API from file
@@ -121,14 +122,41 @@ Public Class frmMain
         'lblMessRemain.Enabled = Not targetNumber.Contains("@")
 
         ' Enable or disable the "Email to SMS" button based on the input text
-        If txtTargetNumber.Text.StartsWith("@") OrElse String.IsNullOrEmpty(txtTargetNumber.Text) Then
+        If targetNumber.StartsWith("@") OrElse String.IsNullOrEmpty(targetNumber) Then
             btnEmailToSMS.Enabled = False ' Disable the button
         Else
             ' Check if the number of digits before "@" is at least 10
-            Dim phoneNumber As String = txtTargetNumber.Text.Split({"@"}, StringSplitOptions.RemoveEmptyEntries)(0)
+            Dim phoneNumber As String = targetNumber.Split({"@"}, StringSplitOptions.RemoveEmptyEntries)(0)
             btnEmailToSMS.Enabled = phoneNumber.Length >= 10 ' Enable or disable the button based on the phone number length
         End If
+
+        ' Enable or disable the "btnEmailValidation" button based on the input text
+        If targetNumber.StartsWith("@") OrElse String.IsNullOrEmpty(targetNumber) Then
+            btnEmailValidation.Enabled = False ' Disable the button
+        Else
+            ' Check if the number of digits before "@" is at least 10
+            Dim phoneNumber As String = targetNumber.Split({"@"}, StringSplitOptions.RemoveEmptyEntries)(0)
+            btnEmailValidation.Enabled = phoneNumber.Length >= 10 ' Enable or disable the button based on the phone number length
+        End If
+
+        ' Enable or disable the "Mailbait Submit" button based on the presence of the "@" symbol
+        btnMailbaitSubmit.Enabled = targetNumber.Contains("@")
+
+        ' Enable or disable the "Mail Check Submit" button based on the presence of the "@" symbol
+        btnEmailValidation.Enabled = targetNumber.Contains("@")
+
+        ' Check if the input contains at least 10 numbers before enabling the buttons
+        Dim numericInput As String = New String(targetNumber.Where(Function(c) Char.IsDigit(c)).ToArray())
+        Dim hasTenDigits As Boolean = numericInput.Length >= 10
+        btnSendSMS.Enabled = btnSendSMS.Enabled AndAlso hasTenDigits
+        btnEmailToSMS.Enabled = btnEmailToSMS.Enabled AndAlso hasTenDigits
+        btnVerifyNumber.Enabled = btnVerifyNumber.Enabled AndAlso hasTenDigits
     End Sub
+
+
+
+
+
 
     Private Function ValidateNumber(number As String) As Boolean
         ' Add "+1" to the beginning of the number
@@ -144,15 +172,16 @@ Public Class frmMain
         Return True
     End Function
 
-    Private Sub btnClose_Click_1(sender As Object, e As EventArgs) Handles btnClose.Click
+    Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
         Me.Close()
     End Sub
 
-    Private Sub btnEmailToSMS_Click_1(sender As Object, e As EventArgs) Handles btnEmailToSMS.Click
-
+    Private Sub btnEmailToSMS_Click(sender As Object, e As EventArgs) Handles btnEmailToSMS.Click
+        ' Show the spinning wheel cursor
+        Me.UseWaitCursor = True
         ' Check if the email address is empty or does not contain the "@" symbol
         If String.IsNullOrEmpty(txtTargetNumber.Text) OrElse Not txtTargetNumber.Text.Contains("@") Then
-            MessageBox.Show("Please enter a valid target email address and cellular provider address.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            MessageBox.Show("Please enter a valid target email address OR cellular provider address.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             Return
         End If
 
@@ -167,6 +196,7 @@ Public Class frmMain
                     ' Send the email message as SMS.
                     Dim selected_provider As String = dbSelectCellProvider.SelectedItem.ToString()
                     SendEmailToSMS.sendemailtosms()
+                    'Task.Run(Sub() SendEmailToSMS())
                 End If
             Else
                 ' Notify the user to enter a target number.
@@ -176,6 +206,8 @@ Public Class frmMain
             ' Notify the user to select a cellular provider.
             MessageBox.Show("Please select a cellular provider.")
         End If
+        ' Hide the spinning wheel cursor and re-enable the button
+        Me.UseWaitCursor = False
 
     End Sub
 
@@ -213,6 +245,7 @@ Public Class frmMain
     {"T-Mobile", "@tmomail.net"},
     {"Sprint", "@messaging.sprintpcs.com"},
     {"Google Fi", "@msg.fi.google.com"},
+    {"Aerial Communications", "@sms.aerialink.net"},
     {"Bell Canada", "@txt.bell.ca"},
     {"Rogers Wireless", "@sms.rogers.com"},
     {"Telus", "@msg.telus.com"},
@@ -251,32 +284,32 @@ Public Class frmMain
 
     End Sub
 
-    Private Sub btnSendSMS_Click_1(sender As Object, e As EventArgs) Handles btnSendSMS.Click
+    Private Sub btnSendSMS_Click(sender As Object, e As EventArgs) Handles btnSendSMS.Click
+        ' Show the spinning wheel cursor
+        Me.UseWaitCursor = True
         ' Check if the target number textbox is empty
         If String.IsNullOrEmpty(txtTargetNumber.Text.Trim()) Then
             MessageBox.Show("Please enter a target number.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             Return
         End If
 
-        Dim message As String
-        Dim boldFont As New Font("Arial", 11, FontStyle.Bold)
-        Dim confirmDialog As DialogResult = MessageBox.Show("Is " & txtTargetNumber.Text & " the correct target number with " & txtOpenTabs.Text & " open MailBait tabs?" & vbCrLf & vbCrLf, "Confirm Target Number and Number of Open Tabs", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
+        ' Ask for confirmation of the number of messages to be sent
+        Dim numberOfMessages As Integer
+        If Integer.TryParse(txtNumberofMessages.Text, numberOfMessages) Then
+            Dim confirmationMessage As String = $"Are you sure you want to send {numberOfMessages} messages to {txtTargetNumber.Text}?"
+            Dim confirmDialog As DialogResult = MessageBox.Show(confirmationMessage, "Confirm Message Sending", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
 
-        If confirmDialog = DialogResult.Yes Then
-            message = "Are you sure you want to proceed with sending messages to " & txtTargetNumber.Text & "? This will open our own browser with " & txtOpenTabs.Text & "" & vbCrLf & vbCrLf
-            Dim confirmDialog2 As DialogResult = MessageBox.Show(message, "Confirm Message Sending", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
-
-            If confirmDialog2 = DialogResult.Yes Then
-                ' rest of the code
-
-
+            If confirmDialog = DialogResult.Yes Then
                 ' Sent over on 03/21/23
                 SendSMS.SendSMS()
-
             End If
+        Else
+            MessageBox.Show("Invalid number of messages.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
         End If
-
+        ' Hide the spinning wheel cursor and re-enable the button
+        Me.UseWaitCursor = False
     End Sub
+
 
     Private Sub btnVerifyNumber_Click(sender As Object, e As EventArgs) Handles btnVerifyNumber.Click
 
@@ -290,8 +323,7 @@ Public Class frmMain
             Dim apiKey As String = ""
 
             If Not System.IO.File.Exists(apiKeyFilePath) Then
-                MessageBox.Show("API key file not found. Please go to Settings and add one.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-
+                MessageBox.Show("API key file not found. Please go to Settings and add one. Basic use keys are no cost. ", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Exit Sub
             End If
 
@@ -334,6 +366,12 @@ Public Class frmMain
             txtVerificationResults.Text += "Leaked: " + responseObj("leaked").ToString() + vbCrLf
             txtVerificationResults.Text += "Spammer: " + responseObj("spammer").ToString() + vbCrLf
             txtVerificationResults.Text += "Do Not Call: " + responseObj("do_not_call").ToString() + vbCrLf
+            txtVerificationResults.Text += "User Activity: " + responseObj("user_activity").ToString() + vbCrLf
+            txtVerificationResults.Text += "Message: " + responseObj("message").ToString() + vbCrLf
+            txtVerificationResults.Text += "Errors: " + responseObj("errors").ToString() + vbCrLf
+            txtVerificationResults.Text += "Associated emails found: " + responseObj("associated_email_addresses").ToString() + vbCrLf
+            txtVerificationResults.Text += "END " + vbCrLf
+
 
         Catch ex As WebException
             Dim response As HttpWebResponse = CType(ex.Response, HttpWebResponse)
@@ -341,9 +379,7 @@ Public Class frmMain
             MessageBox.Show("API Error: " + responseContent)
 
         Catch ex As Exception
-            MessageBox.Show("Error: " + ex.Message)
-            ' Hide the hourglass cursor
-            Cursor.Current = Cursors.Default
+            'MessageBox.Show("Error: " + ex.Message)
         End Try
         ' Hide the spinning wheel cursor and re-enable the button
         Me.UseWaitCursor = False
@@ -351,43 +387,58 @@ Public Class frmMain
 
     End Sub
 
+
+
     Private counter As Integer = 0
     Private tabsToOpen As Integer = 0
 
 
     Private Async Sub btnMailbaitSubmit_Click(sender As Object, e As EventArgs) Handles btnMailbaitSubmit.Click
+        ' Show the spinning wheel cursor
+        Me.UseWaitCursor = True
+        Try
+            Dim openTabsCount As Integer = 0
+            If Integer.TryParse(txtOpenTabs.Text, openTabsCount) Then
+                Dim message As String = "IMPORTANT! Activate your VPN before proceeding. If you don't, you'll BLAST YOUR IP TO THE TARGET!" & vbCrLf &
+                                        "You have selected " & openTabsCount.ToString() & " open tabs." & vbCrLf &
+                                    "To emphasize the seriousness of the matter, open a significant number of tabs (approximately 50-75) over the course of 48 to 72 hours." & vbCrLf &
+                "This extended duration will undoubtedly leave a lasting impact to your target." & vbCrLf &
+                "Click 'Yes' to continue or 'No' to cancel."
 
+                Dim result As DialogResult = MessageBox.Show(message, "VPN Reminder To Set", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
 
-        ' Start the progress bar animation
-        pbAllFunctions.Style = ProgressBarStyle.Marquee
-        pbAllFunctions.MarqueeAnimationSpeed = 50 ' Set a value that works well for you
+                ' Continue with the logic based on the user's response
+                If result = DialogResult.Yes Then
+                    ' Start the progress bar animation
+                    pbAllFunctions.Style = ProgressBarStyle.Marquee
+                    pbAllFunctions.MarqueeAnimationSpeed = 50 ' Set a value that works well for you
 
-        txtOutgoingMessages.Text = "Currently submitting targets information to hundreds of spam outlets. Do not close. "
+                    txtOutgoingMessages.Text = "Currently submitting targets information to hundreds of spam outlets. Do not close. "
 
-        ' Show the browser form
-        frmBrowser.Show()
+                    ' Show the browser form
+                    frmBrowser.Show()
 
-        ' Check if the email address is empty or does not contain the "@" symbol
-        If String.IsNullOrEmpty(txtTargetNumber.Text) OrElse Not txtTargetNumber.Text.Contains("@") Then
-            MessageBox.Show("Please enter a valid target email address and cellular provider address.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            Return
-        End If
+                    ' Check if the email address is empty or does not contain the "@" symbol
+                    If String.IsNullOrEmpty(txtTargetNumber.Text) OrElse Not txtTargetNumber.Text.Contains("@") Then
+                        MessageBox.Show("Please enter a valid target email address or cellular provider address.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                        Return
+                    End If
 
-        ' Set the number of tabs to open
-        tabsToOpen = Integer.Parse(txtOpenTabs.Text)
+                    ' Set the number of tabs to open
+                    tabsToOpen = Integer.Parse(txtOpenTabs.Text)
 
-        ' Loop to open multiple tabs
-        For i As Integer = 1 To tabsToOpen
-            ' Load the Mailbait website in a new tab
-            Dim url As String = "http://mailbait.info/run.html"
-            Dim tabPage As New TabPage("Tab " & i)
-            Dim webView As New WebView2()
-            tabPage.Controls.Add(webView)
-            webView.Dock = DockStyle.Fill
-            frmBrowser.TabControl1.TabPages.Add(tabPage)
+                    ' Loop to open multiple tabs
+                    For i As Integer = 1 To tabsToOpen
+                        ' Load the Mailbait website in a new tab
+                        Dim url As String = "http://mailbait.info/run.html"
+                        Dim tabPage As New TabPage("Tab " & i)
+                        Dim webView As New WebView2()
+                        tabPage.Controls.Add(webView)
+                        webView.Dock = DockStyle.Fill
+                        frmBrowser.TabControl1.TabPages.Add(tabPage)
 
-            ' Wait for the WebView2 control to be initialized before navigating to the URL
-            AddHandler webView.CoreWebView2InitializationCompleted,
+                        ' Wait for the WebView2 control to be initialized before navigating to the URL
+                        AddHandler webView.CoreWebView2InitializationCompleted,
             Async Sub(sender2 As Object, e2 As CoreWebView2InitializationCompletedEventArgs)
                 Await webView.EnsureCoreWebView2Async(Nothing)
                 webView.CoreWebView2.Navigate(url)
@@ -417,12 +468,96 @@ Public Class frmMain
 
                     End Sub
             End Sub
-            Await webView.EnsureCoreWebView2Async(Nothing)
-        Next
+                        Await webView.EnsureCoreWebView2Async(Nothing)
+                    Next
+                End If
+            End If
+        Catch ex As Exception
+            MessageBox.Show("An error occurred: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+        ' Hide the spinning wheel cursor and re-enable the button
+        Me.UseWaitCursor = False
+    End Sub
+
+
+
+
+    Private Sub btnEmailValidation_Click(sender As Object, e As EventArgs) Handles btnEmailValidation.Click
+
+        ' Show the spinning wheel cursor
+        Me.UseWaitCursor = True
+        ' Disable the button so the user cannot click it while the verification is in progress
+        btnEmailValidation.Enabled = False
+        ' Read the API key from the text file.
+        Try
+            ' Read the API key from the text file.
+            Dim apiKeyFilePath As String = "C:\RelentlessSMS\APIs\IPQualityScoreAPI.txt"
+            Dim apiKey As String = ""
+
+            If Not File.Exists(apiKeyFilePath) Then
+                MessageBox.Show("API key file not found. Please go to Settings and add one.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Exit Sub
+            End If
+
+            apiKey = File.ReadAllText(apiKeyFilePath).Trim()
+
+            ' Set the email address to verify.
+            Dim emailAddress As String = txtTargetNumber.Text.Trim()
+
+            ' Build the API request URL.
+            Dim apiUrl As String = $"https://www.ipqualityscore.com/api/json/email/{apiKey}/{emailAddress}"
+
+            ' Send the API request.
+            Dim client As New WebClient()
+            Dim responseJson As String = client.DownloadString(apiUrl)
+
+            ' Parse the API response.
+            Dim responseObj As JObject = JObject.Parse(responseJson)
+
+            ' Display the verification results.
+            txtVerificationResults.Text = "Valid: " & responseObj("valid").ToString() & vbCrLf
+            txtVerificationResults.Text += "Disposable: " & responseObj("disposable").ToString() & vbCrLf
+            txtVerificationResults.Text += "Deliverability: " & responseObj("deliverability").ToString() & vbCrLf
+            txtVerificationResults.Text += "Catch All: " & responseObj("catch_all").ToString() & vbCrLf
+            txtVerificationResults.Text += "Leaked: " & responseObj("leaked").ToString() & vbCrLf
+            txtVerificationResults.Text += "Suspect: " & responseObj("suspect").ToString() & vbCrLf
+            txtVerificationResults.Text += "SMTP Score: " & responseObj("smtp_score").ToString() & vbCrLf
+            txtVerificationResults.Text += "Overall Score: " & responseObj("overall_score").ToString() & vbCrLf
+            txtVerificationResults.Text += "First Name: " & responseObj("first_name").ToString() & vbCrLf
+            txtVerificationResults.Text += "Common: " & responseObj("common").ToString() & vbCrLf
+            txtVerificationResults.Text += "Generic: " & responseObj("generic").ToString() & vbCrLf
+            txtVerificationResults.Text += "DNS Valid: " & responseObj("dns_valid").ToString() & vbCrLf
+            txtVerificationResults.Text += "Honeypot: " & responseObj("honeypot").ToString() & vbCrLf
+            txtVerificationResults.Text += "Spam Trap Score: " & responseObj("spam_trap_score").ToString() & vbCrLf
+            txtVerificationResults.Text += "Fraud Score: " & responseObj("fraud_score").ToString() & vbCrLf
+            txtVerificationResults.Text += "Recent Abuse: " & responseObj("recent_abuse").ToString() & vbCrLf
+            txtVerificationResults.Text += "Frequent Complainer: " & responseObj("frequent_complainer").ToString() & vbCrLf
+            txtVerificationResults.Text += "Sanitized Email: " & responseObj("sanitized_email").ToString() & vbCrLf
+            txtVerificationResults.Text += "User Activity: " & responseObj("user_activity").ToString() & vbCrLf
+            txtVerificationResults.Text += "Domain Velocity: " & responseObj("domain_velocity").ToString() & vbCrLf
+            'txtVerificationResults.Text += "Associated Names: " & responseObj("associated_names").ToString() & vbCrLf
+            'txtVerificationResults.Text += "Associated Phone Numbers: " & responseObj("associated_phone_numbers").ToString() & vbCrLf
+            txtVerificationResults.Text += "END " + vbCrLf
+
+
+
+
+
+        Catch ex As WebException
+            Dim response As HttpWebResponse = CType(ex.Response, HttpWebResponse)
+            Dim responseContent As String = New StreamReader(response.GetResponseStream()).ReadToEnd()
+            MessageBox.Show("API Error: " + responseContent)
+
+        Catch ex As Exception
+            'MessageBox.Show("Error: " + ex.Message)
+        End Try
+        ' Hide the spinning wheel cursor and re-enable the button
+        Me.UseWaitCursor = False
+        btnEmailValidation.Enabled = True
 
     End Sub
 
-    ' End of the method
+
 
 End Class
 
@@ -456,15 +591,9 @@ End Class
 '    Next
 'End Sub
 
-
-
-
-
 '    ' Launch the default browser and navigate to the webpage URL
 '    Dim url As String = "http://mailbait.info/run.html"
 '    Process.Start(New ProcessStartInfo With {.FileName = url, .UseShellExecute = True})
-
-
 
 '    ' Wait for the page to load
 '    Threading.Thread.Sleep(5000) ' You may need to adjust this delay depending on the page load time

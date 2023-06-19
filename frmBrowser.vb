@@ -1,43 +1,48 @@
 ﻿' 3/28/23
 ' Made by ░▒▓█│【MrBungle】│█▓▒░
 
+Imports System.Threading
+
 Public Class FrmBrowser
 
-    Private Sub FrmBrowser_Load(sender As Object, e As EventArgs)
-
-        '' Hide the form
-        'Me.Visible = False
-        'Me.ShowInTaskbar = False
-        'Me.Opacity = 0
-        'Me.FormBorderStyle = FormBorderStyle.None
-
-        ' StatusStripProgressBar
+    Private Sub FrmBrowser_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         StatusStripProgressBar.Style = ProgressBarStyle.Marquee
-        StatusStripProgressBar.MarqueeAnimationSpeed = 75 ' Set a value that works well for you
-
+        StatusStripProgressBar.MarqueeAnimationSpeed = 75
     End Sub
 
     Private Sub StatusTextChanged()
-        StatusStripStatusText.Text = CType(TabControl1.SelectedTab.Controls.Item(0), WebBrowser).StatusText
+        StatusStripStatusText.Text = DirectCast(TabControl1.SelectedTab.Controls.Item(0), WebBrowser).StatusText
     End Sub
 
-    Private Sub CloseToolStripMenuItem_Click_1(sender As Object, e As EventArgs)
+    Private Sub CloseToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CloseToolStripMenuItem.Click
         Me.Close()
     End Sub
 
     Private Sub ProgressChanged(sender As Object, e As Windows.Forms.WebBrowserProgressChangedEventArgs)
+        Dim webBrowser = DirectCast(TabControl1.SelectedTab.Controls.Item(0), WebBrowser)
         StatusStripProgressBar.Value = (e.CurrentProgress / e.MaximumProgress) * 100
-        If ToolStripURL.Focused = False Then
-            ToolStripURL.Text = CType(TabControl1.SelectedTab.Controls.Item(0), WebBrowser).Url.ToString
+        If Not ToolStripURL.Focused Then
+            ToolStripURL.Text = webBrowser.Url.ToString()
         End If
     End Sub
 
-
-    Private Sub frmBrowser_Close(sender As Object, e As EventArgs) Handles MyBase.FormClosed
+    Private Sub FrmBrowser_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
         frmMain.txtOutgoingMessages.Text = ""
-        frmMain.pbAllFunctions.Dispose()
+
+        ' Delay for 5 seconds
+        Thread.Sleep(5000)
+
+        ' Stop the marquee animation on pbAllFunctions
+        frmMain.Invoke(Sub() frmMain.pbAllFunctions.Style = ProgressBarStyle.Continuous)
+
+        ' Show the progress bar
+        frmMain.Invoke(Sub() frmMain.pbAllFunctions.Show())
     End Sub
+
+
 End Class
+
+
 
 
 
