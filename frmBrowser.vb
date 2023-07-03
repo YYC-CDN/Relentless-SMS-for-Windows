@@ -8,6 +8,11 @@ Public Class FrmBrowser
     Private Sub FrmBrowser_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         StatusStripProgressBar.Style = ProgressBarStyle.Marquee
         StatusStripProgressBar.MarqueeAnimationSpeed = 75
+
+
+
+
+
     End Sub
 
     Private Sub StatusTextChanged()

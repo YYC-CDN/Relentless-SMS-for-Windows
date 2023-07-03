@@ -52,13 +52,14 @@ Partial Class frmSettings
         Label10 = New Label()
         Label11 = New Label()
         btnAPIcredit = New Button()
+        cbShowBrowser = New CheckBox()
         GroupBox1.SuspendLayout()
         SuspendLayout()
         ' 
         ' btnClose
         ' 
         btnClose.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
-        btnClose.Location = New Point(629, 459)
+        btnClose.Location = New Point(638, 452)
         btnClose.Name = "btnClose"
         btnClose.Size = New Size(107, 37)
         btnClose.TabIndex = 15
@@ -73,7 +74,8 @@ Partial Class frmSettings
         Label1.Name = "Label1"
         Label1.Size = New Size(29, 17)
         Label1.TabIndex = 100
-        Label1.Text = "API:"' 
+        Label1.Text = "API:"
+        ' 
         ' txtTextNowAPI
         ' 
         txtTextNowAPI.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
@@ -91,7 +93,8 @@ Partial Class frmSettings
         Label6.Name = "Label6"
         Label6.Size = New Size(199, 17)
         Label6.TabIndex = 100
-        Label6.Text = "Regular Text Message Send API"' 
+        Label6.Text = "Regular Text Message Send API"
+        ' 
         ' btnAddTextNowAPI
         ' 
         btnAddTextNowAPI.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
@@ -112,7 +115,8 @@ Partial Class frmSettings
         lblLinkHome.Size = New Size(102, 17)
         lblLinkHome.TabIndex = 100
         lblLinkHome.TabStop = True
-        lblLinkHome.Text = "Get the API here"' 
+        lblLinkHome.Text = "Get the API here"
+        ' 
         ' Label2
         ' 
         Label2.AutoSize = True
@@ -140,7 +144,8 @@ Partial Class frmSettings
         RichTextBox2.Name = "RichTextBox2"
         RichTextBox2.Size = New Size(522, 50)
         RichTextBox2.TabIndex = 100
-        RichTextBox2.Text = "To add an API, enter it in the textbox and click ""Add API"". The API will be added to the list, which will be cycled through when sending messages. You can enter the file by"' 
+        RichTextBox2.Text = "To add an API, enter it in the textbox and click ""Add API"". The API will be added to the list, which will be cycled through when sending messages. You can enter the file by"
+        ' 
         ' btnIPQualityScore
         ' 
         btnIPQualityScore.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
@@ -159,7 +164,8 @@ Partial Class frmSettings
         Label4.Name = "Label4"
         Label4.Size = New Size(523, 17)
         Label4.TabIndex = 100
-        Label4.Text = "API for IP Quality Score to retrieve and validate phone numbers and email addresses"' 
+        Label4.Text = "API for IP Quality Score to retrieve and validate phone numbers and email addresses"
+        ' 
         ' txtIPQualityScore
         ' 
         txtIPQualityScore.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
@@ -177,7 +183,8 @@ Partial Class frmSettings
         Label5.Name = "Label5"
         Label5.Size = New Size(29, 17)
         Label5.TabIndex = 100
-        Label5.Text = "API:"' 
+        Label5.Text = "API:"
+        ' 
         ' LinkLabel1
         ' 
         LinkLabel1.AutoSize = True
@@ -188,20 +195,22 @@ Partial Class frmSettings
         LinkLabel1.Size = New Size(197, 17)
         LinkLabel1.TabIndex = 100
         LinkLabel1.TabStop = True
-        LinkLabel1.Text = "Get the IP Quality Score API here"' 
+        LinkLabel1.Text = "Get the IP Quality Score API here"
+        ' 
         ' Label7
         ' 
         Label7.AutoSize = True
         Label7.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
-        Label7.Location = New Point(14, 40)
+        Label7.Location = New Point(14, 28)
         Label7.Name = "Label7"
         Label7.Size = New Size(41, 17)
         Label7.TabIndex = 100
-        Label7.Text = "SMTP"' 
+        Label7.Text = "SMTP"
+        ' 
         ' txtSMTPbox
         ' 
         txtSMTPbox.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
-        txtSMTPbox.Location = New Point(57, 36)
+        txtSMTPbox.Location = New Point(57, 24)
         txtSMTPbox.Name = "txtSMTPbox"
         txtSMTPbox.PlaceholderText = "smtp.yourdomain.com"
         txtSMTPbox.Size = New Size(193, 25)
@@ -210,7 +219,7 @@ Partial Class frmSettings
         ' txtPort
         ' 
         txtPort.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
-        txtPort.Location = New Point(304, 36)
+        txtPort.Location = New Point(304, 24)
         txtPort.Name = "txtPort"
         txtPort.PlaceholderText = "587"
         txtPort.Size = New Size(58, 25)
@@ -220,20 +229,22 @@ Partial Class frmSettings
         ' 
         Label8.AutoSize = True
         Label8.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
-        Label8.Location = New Point(263, 40)
+        Label8.Location = New Point(263, 28)
         Label8.Name = "Label8"
         Label8.Size = New Size(32, 17)
         Label8.TabIndex = 100
-        Label8.Text = "Port"' 
+        Label8.Text = "Port"
+        ' 
         ' Label9
         ' 
         Label9.AutoSize = True
         Label9.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
-        Label9.Location = New Point(367, 40)
+        Label9.Location = New Point(367, 28)
         Label9.Name = "Label9"
         Label9.Size = New Size(67, 17)
         Label9.TabIndex = 100
-        Label9.Text = "EnableSSL"' 
+        Label9.Text = "EnableSSL"
+        ' 
         ' LinkLabel2
         ' 
         LinkLabel2.AutoSize = True
@@ -244,21 +255,23 @@ Partial Class frmSettings
         LinkLabel2.Size = New Size(80, 17)
         LinkLabel2.TabIndex = 100
         LinkLabel2.TabStop = True
-        LinkLabel2.Text = "clicking here"' 
+        LinkLabel2.Text = "clicking here"
+        ' 
         ' cbEnableSSL
         ' 
         cbEnableSSL.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
         cbEnableSSL.FormattingEnabled = True
         cbEnableSSL.Items.AddRange(New Object() {"Please Select", "True", "False"})
-        cbEnableSSL.Location = New Point(436, 36)
+        cbEnableSSL.Location = New Point(436, 24)
         cbEnableSSL.Name = "cbEnableSSL"
         cbEnableSSL.Size = New Size(102, 25)
         cbEnableSSL.TabIndex = 6
-        cbEnableSSL.Text = "Please Select"' 
+        cbEnableSSL.Text = "Please Select"
+        ' 
         ' btnAddSMTP
         ' 
         btnAddSMTP.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
-        btnAddSMTP.Location = New Point(555, 33)
+        btnAddSMTP.Location = New Point(555, 21)
         btnAddSMTP.Name = "btnAddSMTP"
         btnAddSMTP.Size = New Size(145, 30)
         btnAddSMTP.TabIndex = 7
@@ -268,7 +281,7 @@ Partial Class frmSettings
         ' btnAddEmailPass
         ' 
         btnAddEmailPass.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
-        btnAddEmailPass.Location = New Point(511, 86)
+        btnAddEmailPass.Location = New Point(511, 74)
         btnAddEmailPass.Name = "btnAddEmailPass"
         btnAddEmailPass.Size = New Size(189, 30)
         btnAddEmailPass.TabIndex = 11
@@ -278,7 +291,7 @@ Partial Class frmSettings
         ' txtEmailAddresses
         ' 
         txtEmailAddresses.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
-        txtEmailAddresses.Location = New Point(14, 89)
+        txtEmailAddresses.Location = New Point(14, 77)
         txtEmailAddresses.Name = "txtEmailAddresses"
         txtEmailAddresses.PlaceholderText = "oj.simpson@domain.com"
         txtEmailAddresses.Size = New Size(328, 25)
@@ -287,7 +300,7 @@ Partial Class frmSettings
         ' txtEmailPassword
         ' 
         txtEmailPassword.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
-        txtEmailPassword.Location = New Point(382, 89)
+        txtEmailPassword.Location = New Point(382, 77)
         txtEmailPassword.Name = "txtEmailPassword"
         txtEmailPassword.PlaceholderText = "iD1dnTd01T"
         txtEmailPassword.Size = New Size(105, 25)
@@ -297,6 +310,7 @@ Partial Class frmSettings
         ' 
         GroupBox1.Controls.Add(Label10)
         GroupBox1.Controls.Add(txtPort)
+        GroupBox1.Controls.Add(Label11)
         GroupBox1.Controls.Add(txtEmailPassword)
         GroupBox1.Controls.Add(Label7)
         GroupBox1.Controls.Add(txtEmailAddresses)
@@ -307,12 +321,13 @@ Partial Class frmSettings
         GroupBox1.Controls.Add(cbEnableSSL)
         GroupBox1.Controls.Add(Label9)
         GroupBox1.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
-        GroupBox1.Location = New Point(7, 310)
+        GroupBox1.Location = New Point(7, 286)
         GroupBox1.Name = "GroupBox1"
-        GroupBox1.Size = New Size(738, 136)
+        GroupBox1.Size = New Size(738, 160)
         GroupBox1.TabIndex = 37
         GroupBox1.TabStop = False
-        GroupBox1.Text = "Email Information"' 
+        GroupBox1.Text = "Email Information"
+        ' 
         ' Label10
         ' 
         Label10.AutoSize = True
@@ -324,11 +339,12 @@ Partial Class frmSettings
         ' Label11
         ' 
         Label11.AutoSize = True
-        Label11.Location = New Point(10, 460)
+        Label11.Location = New Point(14, 129)
         Label11.Name = "Label11"
-        Label11.Size = New Size(567, 15)
+        Label11.Size = New Size(631, 17)
         Label11.TabIndex = 101
-        Label11.Text = "Enter SMTP once, then as many email addresses as you can, they will be added to the list it will email from."' 
+        Label11.Text = "Enter SMTP once, then as many email addresses as you can, they will be added to the list it will email from."
+        ' 
         ' btnAPIcredit
         ' 
         btnAPIcredit.Font = New Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point)
@@ -339,14 +355,24 @@ Partial Class frmSettings
         btnAPIcredit.Text = "Check API Credit Usage"
         btnAPIcredit.UseVisualStyleBackColor = True
         ' 
+        ' cbShowBrowser
+        ' 
+        cbShowBrowser.AutoSize = True
+        cbShowBrowser.Location = New Point(22, 461)
+        cbShowBrowser.Name = "cbShowBrowser"
+        cbShowBrowser.Size = New Size(118, 19)
+        cbShowBrowser.TabIndex = 103
+        cbShowBrowser.Text = "Leave Unchecked"
+        cbShowBrowser.UseVisualStyleBackColor = True
+        ' 
         ' frmSettings
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(758, 503)
+        ClientSize = New Size(758, 498)
         ControlBox = False
+        Controls.Add(cbShowBrowser)
         Controls.Add(btnAPIcredit)
-        Controls.Add(Label11)
         Controls.Add(LinkLabel2)
         Controls.Add(LinkLabel1)
         Controls.Add(btnIPQualityScore)
@@ -402,4 +428,5 @@ Partial Class frmSettings
     Friend WithEvents Label10 As Label
     Friend WithEvents Label11 As Label
     Friend WithEvents btnAPIcredit As Button
+    Friend WithEvents cbShowBrowser As CheckBox
 End Class

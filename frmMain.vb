@@ -25,75 +25,120 @@ Imports System.Diagnostics
 Public Class frmMain
     Private imageFiles As String()
     Private random As New Random()
+    ' Declare provider_options at the class level
+    Private provider_options As Dictionary(Of String, List(Of String))
 
     Private Sub FrmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        Me.Text = " V3.6.00 BETA  | FOR GOVERNMENT USE ONLY | NON GOV'T USE PROHIBITED "
 
+        Me.Text = "V3.760 BETA | FOR GOVERNMENT USE ONLY | NON GOV'T USE PROHIBITED "
         x.startup()
-
         x.buildfiles() ' If Needed. 
-
-        ' Set directory path
-        Dim directoryPath As String = "C:\RelentlessSMS"
-
-        ' Enable the target number textbox for user input
-        txtTargetNumber.ReadOnly = False
-
-        ' Uncheck the cbImagesCheckbox on startup
-        cbImagesCheckbox.Checked = False
-
-        ' Clear this box on load. The text in there is sample for design. 
-        txtVerificationResults.Clear()
-
-        'Load default API from file
-        Dim default_api As String = LoadAPI()
-
-        ' Populate the dropdown box with the provider options
-        dbSelectCellProvider.Text = "Select Carrier"
-        'dbSelectCellProvider.Items.Add("Select Carrier")
-        For Each provider In provider_options
-            dbSelectCellProvider.Items.Add(provider.Key)
-        Next
-
-        ' Populate the dropdown box with the Language options
-        dbOutgoingLanguage.Text = "English (Default)"
-        'dbOutgoingLanguage.Items.Add("English (Default)")
+        Dim directoryPath As String = "C:\RelentlessSMS" ' Set directory path
+        txtTargetNumber.ReadOnly = False    ' Enable the target number textbox for user input
+        cbImagesCheckbox.Checked = False ' Uncheck the cbImagesCheckbox on startup
+        txtVerificationResults.Clear()  ' Clear this box on load. The text in there is sample for design. 
+        Dim default_api As String = LoadAPI()  'Load default API from file
+        Dim apiProxy As String = LoadProxyDetectionAPI()
+        dbOutgoingLanguage.Text = "English (Default)"   ' Populate the dropdown box with the Language options
         For Each language In language_options
             dbOutgoingLanguage.Items.Add(language.Key)
         Next
-
         txtTargetNumber.ForeColor = Color.FromArgb(209, 219, 221)
         txtNumberofMessages.ForeColor = Color.FromArgb(209, 219, 221)
-        'lblMessRemain.ForeColor = Color.FromArgb(209, 219, 221)
-        'lblBalance.ForeColor = Color.FromArgb(209, 219, 221)
         txtSecondsBetween.ForeColor = Color.FromArgb(209, 219, 221)
         txtVerificationResults.Text = "We want to emphasize that using this tool ethically and responsibly is of utmost importance. It is critical to research and verify your target before using this tool, as using it on someone without proper justification can have severe consequences. This tool is intended for educational or testing purposes only and should not be used to harm or harass anyone. This service is provided 'as is' and with no express or implied warranties, endorsements, or associations. We assume no responsibility for any damages or losses resulting from your use of this service. Let's always use technology with integrity and responsibility."
-        'txtVerificationResults.Font = New Font("Verdana", 9)
-        txtOpenTabs.Text = "25"
-
-
-        Dim ipAddress As String = GetIPAddress()
-        lblIPAddress.Text = ipAddress
-
-        ' Disable the buttons on form load
-        btnSendSMS.Enabled = False
-        btnEmailToSMS.Enabled = False
-        btnMailbaitSubmit.Enabled = False
-        btnVerifyNumber.Enabled = False
-        btnEmailValidation.Enabled = False
-
-
-
-
+        txtOpenTabs.Text = "75"
+        provider_options = New Dictionary(Of String, List(Of String))() ' Read the provider options from the text file
+        For Each line As String In File.ReadLines("C:\RelentlessSMS\Providers.txt") ' Read the file line by line and process valid entries
+            If Not line.StartsWith("#") AndAlso Not String.IsNullOrWhiteSpace(line) Then  ' Ignore lines starting with a hash symbol or empty lines
+                Dim parts As String() = line.Split(","c)   ' Split the line into provider name and email domain
+                If parts.Length = 2 Then
+                    ' Trim leading/trailing whitespaces
+                    Dim provider As String = parts(0).Trim()
+                    Dim emailDomain As String = parts(1).Trim()
+                    If provider_options.ContainsKey(provider) Then   ' Check if the provider key already exists in the dictionary
+                        ' If the key exists, add the email domain to the existing list
+                        provider_options(provider).Add(emailDomain)
+                    Else
+                        provider_options.Add(provider, New List(Of String) From {emailDomain}) ' If the key doesn't exist, create a new list and add the email domain
+                    End If
+                End If
+            End If
+        Next
+        ' Populate the dbSelectCellProvider ComboBox
+        dbSelectCellProvider.Items.AddRange(provider_options.Keys.ToArray())
+        ' all the IP bullshit
+        Try
+            FetchProxyDetails()
+        Catch ex As Exception
+            MessageBox.Show("Error: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
-    Private Function GetIPAddress() As String
-        Dim hostName As String = System.Net.Dns.GetHostName()
-        Dim ipEntry As System.Net.IPHostEntry = System.Net.Dns.GetHostEntry(hostName)
-        Dim ipAddress As String = ipEntry.AddressList.FirstOrDefault(Function(a) a.AddressFamily = System.Net.Sockets.AddressFamily.InterNetwork).ToString()
+    Private Async Function GetIPAddressAsync() As Task(Of String)
+        Dim ipAddress As String = ""
+        Try
+            ' Use a web service to get the public IP address asynchronously
+            Using client As New WebClient()
+                Dim response As String = Await client.DownloadStringTaskAsync("https://api.ipify.org")
+                ipAddress = response.Trim()
+            End Using
+        Catch ex As Exception
+            ' Handle the exception as per your requirement
+            ' Display an error message or take appropriate action
+            ' You can also set a default IP address in case of failure
+        End Try
         Return ipAddress
     End Function
+
+    Private Async Sub FetchProxyDetails()
+        ' Read the API key from the text file.
+        Dim apiKeyFilePath As String = "C:\RelentlessSMS\APIs\IPQualityScoreAPI.txt"
+        Dim apiKey As String = ""
+
+        If Not File.Exists(apiKeyFilePath) Then
+            MessageBox.Show("API key file not found. Please go to Settings and add one. Basic use keys are no cost.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        apiKey = File.ReadAllText(apiKeyFilePath).Trim()
+
+        ' Build the API request URL.
+        Dim ipAddress As String = Await GetIPAddressAsync()
+        Dim apiUrl As String = $"https://www.ipqualityscore.com/api/json/ip/{apiKey}/{ipAddress}"
+
+        ' Send the API request.
+        Try
+            Using client As New WebClient()
+                Dim responseJson As String = Await client.DownloadStringTaskAsync(apiUrl)
+
+                ' Parse the API response.
+                Dim responseObj As JObject = JObject.Parse(responseJson)
+
+                ' Get the proxy detection data from the response.
+                Dim proxyValue As String = responseObj("proxy")?.ToString()
+                Dim countryCodeValue As String = responseObj("country_code")?.ToString()
+                Dim regionValue As String = responseObj("region")?.ToString()
+                Dim vpnValue As String = responseObj("vpn")?.ToString()
+
+                ' Display the proxy detection information.
+                lblVPN.Text = "VPN: " & If(Not String.IsNullOrEmpty(vpnValue), vpnValue, "Not Available")
+                lblRegion.Text = "Region: " & If(Not String.IsNullOrEmpty(regionValue), regionValue, "Not Available")
+                lblProxy.Text = "Proxy: " & If(Not String.IsNullOrEmpty(proxyValue), proxyValue, "Not Available")
+                lblCountryCode.Text = "Country Code: " & If(Not String.IsNullOrEmpty(countryCodeValue), countryCodeValue, "Not Available")
+            End Using
+        Catch ex As WebException
+            Dim response As HttpWebResponse = CType(ex.Response, HttpWebResponse)
+            If response.StatusCode = HttpStatusCode.NotFound Then
+                MessageBox.Show("API URL not found. Please check the URL and try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Else
+                MessageBox.Show("API Error: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
+        Catch ex As Exception
+            MessageBox.Show("Error: " & ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
 
     Private Function LoadAPI() As String
         'Read API from file
@@ -103,9 +148,21 @@ Public Class frmMain
         Catch ex As Exception
             MessageBox.Show("Error reading API file: " & ex.Message)
         End Try
-
         Return api
     End Function
+
+    Private Function LoadProxyDetectionAPI() As String
+        'Read API from file
+        Dim apiProxy As String = ""
+        Try
+            apiProxy = File.ReadAllText("C:\RelentlessSMS\APIs\IPQualityScoreAPI.txt")
+        Catch ex As Exception
+            MessageBox.Show("Error reading API file: " & ex.Message)
+        End Try
+
+        Return apiProxy
+    End Function
+
 
 
     Private Sub txtTargetNumber_TextChanged(sender As Object, e As EventArgs) Handles txtTargetNumber.TextChanged
@@ -127,7 +184,7 @@ Public Class frmMain
         Else
             ' Check if the number of digits before "@" is at least 10
             Dim phoneNumber As String = targetNumber.Split({"@"}, StringSplitOptions.RemoveEmptyEntries)(0)
-            btnEmailToSMS.Enabled = phoneNumber.Length >= 10 ' Enable or disable the button based on the phone number length
+            btnEmailToSMS.Enabled = phoneNumber.Length >= 5 ' Enable or disable the button based on the phone number length
         End If
 
         ' Enable or disable the "btnEmailValidation" button based on the input text
@@ -136,7 +193,7 @@ Public Class frmMain
         Else
             ' Check if the number of digits before "@" is at least 10
             Dim phoneNumber As String = targetNumber.Split({"@"}, StringSplitOptions.RemoveEmptyEntries)(0)
-            btnEmailValidation.Enabled = phoneNumber.Length >= 10 ' Enable or disable the button based on the phone number length
+            btnEmailValidation.Enabled = phoneNumber.Length >= 5 ' Enable or disable the button based on the phone number length
         End If
 
         ' Enable or disable the "Mailbait Submit" button based on the presence of the "@" symbol
@@ -147,11 +204,34 @@ Public Class frmMain
 
         ' Check if the input contains at least 10 numbers before enabling the buttons
         Dim numericInput As String = New String(targetNumber.Where(Function(c) Char.IsDigit(c)).ToArray())
-        Dim hasTenDigits As Boolean = numericInput.Length >= 10
+        Dim hasTenDigits As Boolean = numericInput.Length >= 5
         btnSendSMS.Enabled = btnSendSMS.Enabled AndAlso hasTenDigits
         btnEmailToSMS.Enabled = btnEmailToSMS.Enabled AndAlso hasTenDigits
         btnVerifyNumber.Enabled = btnVerifyNumber.Enabled AndAlso hasTenDigits
+        btnEmailValidation.Enabled = btnEmailValidation.Enabled AndAlso hasTenDigits
     End Sub
+
+    Private Sub cbImagesCheckbox_CheckedChanged(sender As Object, e As EventArgs) Handles cbImagesCheckbox.CheckedChanged
+        ' Enable or disable the buttons based on the checked state of cbImagesCheckbox
+        If cbImagesCheckbox.Checked Then
+            btnEmailToSMS.Enabled = True ' Enable the btnEmailToSMS button
+            btnSendSMS.Enabled = False ' Disable other buttons
+            btnMailbaitSubmit.Enabled = False
+            btnVerifyNumber.Enabled = False
+            btnEmailValidation.Enabled = False
+            ' ... disable other buttons as needed
+        Else
+            btnEmailToSMS.Enabled = False ' Disable the btnEmailToSMS button
+            btnSendSMS.Enabled = False ' Disable other buttons
+            btnMailbaitSubmit.Enabled = False
+            btnVerifyNumber.Enabled = False
+            btnEmailValidation.Enabled = False
+            ' ... disable other buttons as needed
+        End If
+        'btnSettings.Enabled = False ' Disable the Settings button
+        'btnClose.Enabled = False ' Disable the Close button
+    End Sub
+
 
 
 
@@ -173,7 +253,7 @@ Public Class frmMain
     End Function
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
-        Me.Close()
+        Application.Exit()
     End Sub
 
     Private Sub btnEmailToSMS_Click(sender As Object, e As EventArgs) Handles btnEmailToSMS.Click
@@ -224,8 +304,11 @@ Public Class frmMain
     Private Sub DbSelectCellProvider_SelectedIndexChanged(sender As Object, e As EventArgs) Handles dbSelectCellProvider.SelectedIndexChanged
         ' Get the selected provider option
         Dim selected_provider As String = dbSelectCellProvider.SelectedItem.ToString()
-        ' Get the corresponding email domain from the provider options dictionary
-        Dim email_domain As String = provider_options(selected_provider)
+        ' Get the corresponding email domains list from the provider options dictionary
+        Dim email_domains As List(Of String) = provider_options(selected_provider)
+
+        ' Select the first email domain from the list
+        Dim email_domain As String = email_domains(0)
 
         ' Update the txtTargetNumber field with the email domain, if applicable
         If txtTargetNumber.Text.Contains("@") Then
@@ -238,28 +321,7 @@ Public Class frmMain
     End Sub
 
 
-    ' Define the provider options dictionary
-    Dim provider_options As New Dictionary(Of String, String) From {
-    {"Verizon", "@vtext.com"},
-    {"AT&T", "@txt.att.net"},
-    {"T-Mobile", "@tmomail.net"},
-    {"Sprint", "@messaging.sprintpcs.com"},
-    {"Google Fi", "@msg.fi.google.com"},
-    {"Aerial Communications", "@sms.aerialink.net"},
-    {"Bell Canada", "@txt.bell.ca"},
-    {"Rogers Wireless", "@sms.rogers.com"},
-    {"Telus", "@msg.telus.com"},
-    {"MetroPCS", "@mymetropcs.com"},
-    {"Cricket Wireless", "@mms.cricketwireless.net"},
-    {"U.S. Cellular", "@email.uscc.net"},
-    {"Virgin Mobile", "@vmobl.com"},
-    {"Boost Mobile", "@sms.myboostmobile.com"},
-    {"Fido", "@fido.ca"},
-    {"Koodo Mobile", "@msg.koodomobile.com"},
-    {"SaskTel Mobility", "@sms.sasktel.com"},
-    {"MTS Mobility", "@text.mtsmobility.com"},
-    {"Wind Mobile", "@txt.windmobile.ca"}
-}
+
     ' Define the provider options dictionary
     Dim language_options As New Dictionary(Of String, String) From {
     {"English (Default)", "en"},
@@ -396,12 +458,20 @@ Public Class frmMain
     Private Async Sub btnMailbaitSubmit_Click(sender As Object, e As EventArgs) Handles btnMailbaitSubmit.Click
         ' Show the spinning wheel cursor
         Me.UseWaitCursor = True
+
+
+
+        'If frmSettings.cbShowBrowser.Checked Then
+        '    frmBrowser.Show()
+        'Else
+        '    frmBrowser.Hide()
+        'End If
         Try
             Dim openTabsCount As Integer = 0
             If Integer.TryParse(txtOpenTabs.Text, openTabsCount) Then
                 Dim message As String = "IMPORTANT! Activate your VPN before proceeding. If you don't, you'll BLAST YOUR IP TO THE TARGET!" & vbCrLf &
-                                        "You have selected " & openTabsCount.ToString() & " open tabs." & vbCrLf &
-                                    "To emphasize the seriousness of the matter, open a significant number of tabs (approximately 50-75) over the course of 48 to 72 hours." & vbCrLf &
+                                        "You have selected " & openTabsCount.ToString() & " open session(s)." & vbCrLf &
+                                    "To emphasize the seriousness of the matter, open a significant number of sessions (approximately 50-75) over the course of 48 to 72 hours." & vbCrLf &
                 "This extended duration will undoubtedly leave a lasting impact to your target." & vbCrLf &
                 "Click 'Yes' to continue or 'No' to cancel."
 
@@ -416,7 +486,11 @@ Public Class frmMain
                     txtOutgoingMessages.Text = "Currently submitting targets information to hundreds of spam outlets. Do not close. "
 
                     ' Show the browser form
-                    frmBrowser.Show()
+                    'frmBrowser.Show()
+
+
+                    Dim frmBrowser As New frmBrowser()
+                    frmBrowser.Visible = False ' Set the Visible property to False
 
                     ' Check if the email address is empty or does not contain the "@" symbol
                     If String.IsNullOrEmpty(txtTargetNumber.Text) OrElse Not txtTargetNumber.Text.Contains("@") Then
@@ -557,8 +631,37 @@ Public Class frmMain
 
     End Sub
 
+    Private Sub btnInternalEmailSend_Click(sender As Object, e As EventArgs) Handles btnInternalEmailSend.Click
+        ' Show the spinning wheel cursor
+        Me.UseWaitCursor = True
+
+        ' Start the progress bar animation
+        pbAllFunctions.Style = ProgressBarStyle.Marquee
+        pbAllFunctions.MarqueeAnimationSpeed = 100 ' Set a value that works well for you
+
+        txtOutgoingMessages.Text = "Currently submitting targets information to hundreds of spam outlets. Do not close. "
 
 
+
+        'Start the internal mass email program 06/28/23
+        InternalMaillistSubscriber.EmailSend()
+        'Console.ReadLine() ' Wait for user input before closing the console window
+
+
+
+    End Sub
+
+    Private Sub btnStopAll_Click(sender As Object, e As EventArgs) Handles btnStopAll.Click
+
+        If frmBrowser.Visible = True Then
+            frmBrowser.Close()
+        End If
+        ' Clear this box on load. The text in there is sample for design. 
+        'txtVerificationResults.Clear()
+        'Application.Exit()
+        Me.UseWaitCursor = False
+
+    End Sub
 End Class
 
 

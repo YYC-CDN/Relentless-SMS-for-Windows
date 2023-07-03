@@ -51,10 +51,15 @@ Partial Class frmMain
         Label1 = New Label()
         txtOpenTabs = New TextBox()
         btnEmailValidation = New Button()
-        txtVerificationResults = New TextBox()
-        lblIPAddress = New Label()
+        lblRegion = New Label()
         Label3 = New Label()
+        btnInternalEmailSend = New Button()
+        btnStopAll = New Button()
+        txtVerificationResults = New TextBox()
         Label4 = New Label()
+        lblProxy = New Label()
+        lblCountryCode = New Label()
+        lblVPN = New Label()
         CType(SplitContainer1, ComponentModel.ISupportInitialize).BeginInit()
         SplitContainer1.Panel1.SuspendLayout()
         SplitContainer1.SuspendLayout()
@@ -73,7 +78,7 @@ Partial Class frmMain
         cbImagesCheckbox.Size = New Size(383, 22)
         cbImagesCheckbox.TabIndex = 1
         cbImagesCheckbox.Text = "Check to send Images with Email to SMS (only)"
-        ToolTip1.SetToolTip(cbImagesCheckbox, "Images are stored here- C:\RelentlessSMS\OutgoingImages and this is " & vbCrLf & "NOT applicable with SpamSend Campaigns.")
+        ToolTip1.SetToolTip(cbImagesCheckbox, resources.GetString("cbImagesCheckbox.ToolTip"))
         cbImagesCheckbox.UseVisualStyleBackColor = True
         ' 
         ' phone_number_label
@@ -85,11 +90,13 @@ Partial Class frmMain
         phone_number_label.Name = "phone_number_label"
         phone_number_label.Size = New Size(416, 35)
         phone_number_label.TabIndex = 3
-        phone_number_label.Text = "Target Number or Email:"' 
+        phone_number_label.Text = "Target Number or Email:"
+        ' 
         ' SplitContainer1
         ' 
         SplitContainer1.Location = New Point(1, 60)
-        SplitContainer1.Name = "SplitContainer1"' 
+        SplitContainer1.Name = "SplitContainer1"
+        ' 
         ' SplitContainer1.Panel1
         ' 
         SplitContainer1.Panel1.BackColor = Color.Gainsboro
@@ -128,7 +135,7 @@ Partial Class frmMain
         PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), Image)
         PictureBox1.Location = New Point(0, 0)
         PictureBox1.Name = "PictureBox1"
-        PictureBox1.Size = New Size(211, 624)
+        PictureBox1.Size = New Size(211, 631)
         PictureBox1.TabIndex = 3
         PictureBox1.TabStop = False
         ' 
@@ -139,11 +146,12 @@ Partial Class frmMain
         btnEmailToSMS.Cursor = Cursors.Hand
         btnEmailToSMS.Font = New Font("Verdana", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
         btnEmailToSMS.ForeColor = SystemColors.ControlLightLight
-        btnEmailToSMS.Location = New Point(55, 181)
+        btnEmailToSMS.Location = New Point(11, 178)
         btnEmailToSMS.Name = "btnEmailToSMS"
-        btnEmailToSMS.Size = New Size(100, 56)
+        btnEmailToSMS.Size = New Size(190, 43)
         btnEmailToSMS.TabIndex = 8
         btnEmailToSMS.Text = "Start Email to SMS Campaign"
+        ToolTip1.SetToolTip(btnEmailToSMS, "Use your internal email address to send messages to the target")
         btnEmailToSMS.UseVisualStyleBackColor = False
         ' 
         ' dbSelectCellProvider
@@ -159,7 +167,8 @@ Partial Class frmMain
         dbSelectCellProvider.Name = "dbSelectCellProvider"
         dbSelectCellProvider.Size = New Size(217, 26)
         dbSelectCellProvider.TabIndex = 3
-        ToolTip1.SetToolTip(dbSelectCellProvider, "This is a list of carriers providing Short Message Service (SMS) transit via SMS gateways.")
+        dbSelectCellProvider.Text = "Please Select"
+        ToolTip1.SetToolTip(dbSelectCellProvider, "This is a list of carriers providing Short Message Service (SMS) transit via SMS gateways." & vbCrLf & "You can modify this file here- C:\RelentlessSMS\Providers.txt")
         ' 
         ' txtSecondsBetween
         ' 
@@ -167,7 +176,7 @@ Partial Class frmMain
         txtSecondsBetween.BorderStyle = BorderStyle.None
         txtSecondsBetween.Font = New Font("Verdana", 11.25F, FontStyle.Regular, GraphicsUnit.Point)
         txtSecondsBetween.ForeColor = Color.FromArgb(CByte(209), CByte(219), CByte(221))
-        txtSecondsBetween.Location = New Point(607, 193)
+        txtSecondsBetween.Location = New Point(645, 193)
         txtSecondsBetween.Name = "txtSecondsBetween"
         txtSecondsBetween.Size = New Size(48, 19)
         txtSecondsBetween.TabIndex = 3
@@ -183,7 +192,8 @@ Partial Class frmMain
         lblOutgoingLanguage.Name = "lblOutgoingLanguage"
         lblOutgoingLanguage.Size = New Size(231, 18)
         lblOutgoingLanguage.TabIndex = 8
-        lblOutgoingLanguage.Text = "Select an Outgoing Language:"' 
+        lblOutgoingLanguage.Text = "Select an Outgoing Language:"
+        ' 
         ' lblSecondsBetween
         ' 
         lblSecondsBetween.AutoSize = True
@@ -191,9 +201,10 @@ Partial Class frmMain
         lblSecondsBetween.ForeColor = Color.FromArgb(CByte(209), CByte(219), CByte(221))
         lblSecondsBetween.Location = New Point(235, 193)
         lblSecondsBetween.Name = "lblSecondsBetween"
-        lblSecondsBetween.Size = New Size(364, 18)
+        lblSecondsBetween.Size = New Size(402, 18)
         lblSecondsBetween.TabIndex = 6
-        lblSecondsBetween.Text = "Seconds between sent messages (default is 1):"' 
+        lblSecondsBetween.Text = "Seconds between sent SMS messages (default is 1):"
+        ' 
         ' dbOutgoingLanguage
         ' 
         dbOutgoingLanguage.BackColor = Color.FromArgb(CByte(30), CByte(30), CByte(30))
@@ -214,7 +225,7 @@ Partial Class frmMain
         txtNumberofMessages.BorderStyle = BorderStyle.None
         txtNumberofMessages.Font = New Font("Verdana", 11.25F, FontStyle.Regular, GraphicsUnit.Point)
         txtNumberofMessages.ForeColor = Color.FromArgb(CByte(209), CByte(219), CByte(221))
-        txtNumberofMessages.Location = New Point(607, 152)
+        txtNumberofMessages.Location = New Point(645, 152)
         txtNumberofMessages.Name = "txtNumberofMessages"
         txtNumberofMessages.Size = New Size(48, 19)
         txtNumberofMessages.TabIndex = 2
@@ -228,9 +239,10 @@ Partial Class frmMain
         number_of_messages_label.ForeColor = Color.FromArgb(CByte(209), CByte(219), CByte(221))
         number_of_messages_label.Location = New Point(235, 152)
         number_of_messages_label.Name = "number_of_messages_label"
-        number_of_messages_label.Size = New Size(369, 18)
+        number_of_messages_label.Size = New Size(407, 18)
         number_of_messages_label.TabIndex = 4
-        number_of_messages_label.Text = "Number of overall outgoing messages to target:"' 
+        number_of_messages_label.Text = "Number of overall outgoing SMS messages to target:"
+        ' 
         ' btnSendSMS
         ' 
         btnSendSMS.BackColor = Color.BlueViolet
@@ -238,12 +250,12 @@ Partial Class frmMain
         btnSendSMS.Cursor = Cursors.Hand
         btnSendSMS.Font = New Font("Verdana", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
         btnSendSMS.ForeColor = SystemColors.ControlLightLight
-        btnSendSMS.Location = New Point(55, 135)
+        btnSendSMS.Location = New Point(11, 135)
         btnSendSMS.Name = "btnSendSMS"
-        btnSendSMS.Size = New Size(100, 42)
+        btnSendSMS.Size = New Size(190, 43)
         btnSendSMS.TabIndex = 7
         btnSendSMS.Text = "Start SMS Campaign"
-        ToolTip1.SetToolTip(btnSendSMS, "Starts the SMS/Text Message Campaign")
+        ToolTip1.SetToolTip(btnSendSMS, "Starts the SMS/Text Message Campaign against a regular cellular number" & vbCrLf & "that recieves regular text messages, or SMS messages. ")
         btnSendSMS.UseVisualStyleBackColor = False
         ' 
         ' txtOutgoingMessages
@@ -252,7 +264,7 @@ Partial Class frmMain
         txtOutgoingMessages.BorderStyle = BorderStyle.None
         txtOutgoingMessages.Font = New Font("Verdana", 12F, FontStyle.Regular, GraphicsUnit.Point)
         txtOutgoingMessages.ForeColor = Color.FromArgb(CByte(209), CByte(219), CByte(221))
-        txtOutgoingMessages.Location = New Point(232, 519)
+        txtOutgoingMessages.Location = New Point(232, 526)
         txtOutgoingMessages.Multiline = True
         txtOutgoingMessages.Name = "txtOutgoingMessages"
         txtOutgoingMessages.PlaceholderText = "Preview of Target Screen"
@@ -265,7 +277,7 @@ Partial Class frmMain
         ' 
         pbAllFunctions.BackColor = Color.FromArgb(CByte(34), CByte(39), CByte(42))
         pbAllFunctions.ForeColor = Color.FromArgb(CByte(34), CByte(39), CByte(42))
-        pbAllFunctions.Location = New Point(232, 586)
+        pbAllFunctions.Location = New Point(232, 593)
         pbAllFunctions.MarqueeAnimationSpeed = 200
         pbAllFunctions.Maximum = 500
         pbAllFunctions.Name = "pbAllFunctions"
@@ -295,11 +307,12 @@ Partial Class frmMain
         btnSettings.Cursor = Cursors.Hand
         btnSettings.Font = New Font("Verdana", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
         btnSettings.ForeColor = SystemColors.ControlLightLight
-        btnSettings.Location = New Point(55, 404)
+        btnSettings.Location = New Point(11, 436)
         btnSettings.Name = "btnSettings"
-        btnSettings.Size = New Size(99, 38)
+        btnSettings.Size = New Size(190, 43)
         btnSettings.TabIndex = 11
         btnSettings.Text = "Settings"
+        ToolTip1.SetToolTip(btnSettings, "Program Settings")
         btnSettings.UseVisualStyleBackColor = False
         ' 
         ' btnClose
@@ -309,11 +322,12 @@ Partial Class frmMain
         btnClose.Cursor = Cursors.Hand
         btnClose.Font = New Font("Verdana", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
         btnClose.ForeColor = SystemColors.ControlLightLight
-        btnClose.Location = New Point(55, 447)
+        btnClose.Location = New Point(11, 479)
         btnClose.Name = "btnClose"
-        btnClose.Size = New Size(99, 38)
+        btnClose.Size = New Size(190, 43)
         btnClose.TabIndex = 12
         btnClose.Text = "Close"
+        ToolTip1.SetToolTip(btnClose, "Close Relentless SMS")
         btnClose.UseVisualStyleBackColor = False
         ' 
         ' tmrMessagesRemaining
@@ -327,9 +341,9 @@ Partial Class frmMain
         btnVerifyNumber.Cursor = Cursors.Hand
         btnVerifyNumber.Font = New Font("Verdana", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
         btnVerifyNumber.ForeColor = SystemColors.Control
-        btnVerifyNumber.Location = New Point(55, 303)
+        btnVerifyNumber.Location = New Point(11, 307)
         btnVerifyNumber.Name = "btnVerifyNumber"
-        btnVerifyNumber.Size = New Size(100, 46)
+        btnVerifyNumber.Size = New Size(190, 43)
         btnVerifyNumber.TabIndex = 10
         btnVerifyNumber.Text = "Number Validation"
         ToolTip1.SetToolTip(btnVerifyNumber, "Phone number validation tool")
@@ -341,12 +355,12 @@ Partial Class frmMain
         btnMailbaitSubmit.Cursor = Cursors.Hand
         btnMailbaitSubmit.Font = New Font("Verdana", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
         btnMailbaitSubmit.ForeColor = SystemColors.ControlLight
-        btnMailbaitSubmit.Location = New Point(55, 241)
+        btnMailbaitSubmit.Location = New Point(11, 221)
         btnMailbaitSubmit.Name = "btnMailbaitSubmit"
-        btnMailbaitSubmit.Size = New Size(100, 58)
+        btnMailbaitSubmit.Size = New Size(190, 43)
         btnMailbaitSubmit.TabIndex = 9
-        btnMailbaitSubmit.Text = "Open SpamSend Campaign"
-        ToolTip1.SetToolTip(btnMailbaitSubmit, "Opens Browser for Spam Campaign")
+        btnMailbaitSubmit.Text = "SpamSend V1"
+        ToolTip1.SetToolTip(btnMailbaitSubmit, "SpamSend V1, uses behind-the-scenes websites to submit" & vbCrLf & "the senders email to the mailman mail servers. Keep it open" & vbCrLf & "as long as possible. Don't close this. EVER." & vbCrLf)
         btnMailbaitSubmit.UseVisualStyleBackColor = False
         ' 
         ' Label1
@@ -356,10 +370,10 @@ Partial Class frmMain
         Label1.ForeColor = Color.FromArgb(CByte(209), CByte(219), CByte(221))
         Label1.Location = New Point(235, 370)
         Label1.Name = "Label1"
-        Label1.Size = New Size(424, 18)
+        Label1.Size = New Size(359, 18)
         Label1.TabIndex = 22
-        Label1.Text = "Number of mass email streams (or tabs- 25 is default):"
-        ToolTip1.SetToolTip(Label1, "The more, the better. 50 for 24 hours is great. 75 tabs for 72 hours is brutal. ")
+        Label1.Text = "Number of mass email streams (25 is default):"
+        ToolTip1.SetToolTip(Label1, resources.GetString("Label1.ToolTip"))
         ' 
         ' txtOpenTabs
         ' 
@@ -367,7 +381,7 @@ Partial Class frmMain
         txtOpenTabs.BorderStyle = BorderStyle.None
         txtOpenTabs.Font = New Font("Verdana", 11.25F, FontStyle.Regular, GraphicsUnit.Point)
         txtOpenTabs.ForeColor = Color.FromArgb(CByte(209), CByte(219), CByte(221))
-        txtOpenTabs.Location = New Point(661, 370)
+        txtOpenTabs.Location = New Point(596, 370)
         txtOpenTabs.Name = "txtOpenTabs"
         txtOpenTabs.PlaceholderText = "25"
         txtOpenTabs.Size = New Size(40, 19)
@@ -380,13 +394,70 @@ Partial Class frmMain
         btnEmailValidation.Cursor = Cursors.Hand
         btnEmailValidation.Font = New Font("Verdana", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
         btnEmailValidation.ForeColor = SystemColors.Control
-        btnEmailValidation.Location = New Point(55, 353)
+        btnEmailValidation.Location = New Point(11, 350)
         btnEmailValidation.Name = "btnEmailValidation"
-        btnEmailValidation.Size = New Size(100, 46)
+        btnEmailValidation.Size = New Size(190, 43)
         btnEmailValidation.TabIndex = 101
         btnEmailValidation.Text = "Email Validation"
         ToolTip1.SetToolTip(btnEmailValidation, "Phone number validation tool")
         btnEmailValidation.UseVisualStyleBackColor = False
+        ' 
+        ' lblRegion
+        ' 
+        lblRegion.AutoSize = True
+        lblRegion.BackColor = Color.FromArgb(CByte(18), CByte(18), CByte(18))
+        lblRegion.ForeColor = SystemColors.ControlLightLight
+        lblRegion.Location = New Point(12, 568)
+        lblRegion.Name = "lblRegion"
+        lblRegion.Size = New Size(98, 15)
+        lblRegion.TabIndex = 104
+        lblRegion.Text = "Region: waiting..."
+        lblRegion.TextAlign = Drawing.ContentAlignment.MiddleCenter
+        ToolTip1.SetToolTip(lblRegion, "ON or OFF. Make sure it's ON ")
+        ' 
+        ' Label3
+        ' 
+        Label3.AutoSize = True
+        Label3.BackColor = Color.FromArgb(CByte(18), CByte(18), CByte(18))
+        Label3.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
+        Label3.ForeColor = SystemColors.ControlLightLight
+        Label3.Location = New Point(12, 529)
+        Label3.Name = "Label3"
+        Label3.Size = New Size(158, 17)
+        Label3.TabIndex = 110
+        Label3.Text = "YOUR IP INFORMATION:"
+        Label3.TextAlign = Drawing.ContentAlignment.MiddleCenter
+        ToolTip1.SetToolTip(Label3, "This is YOUR IP information- know before you send!")
+        ' 
+        ' btnInternalEmailSend
+        ' 
+        btnInternalEmailSend.BackColor = Color.BlueViolet
+        btnInternalEmailSend.Cursor = Cursors.Hand
+        btnInternalEmailSend.Enabled = False
+        btnInternalEmailSend.Font = New Font("Verdana", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
+        btnInternalEmailSend.ForeColor = SystemColors.ControlLight
+        btnInternalEmailSend.Location = New Point(11, 264)
+        btnInternalEmailSend.Name = "btnInternalEmailSend"
+        btnInternalEmailSend.Size = New Size(190, 43)
+        btnInternalEmailSend.TabIndex = 111
+        btnInternalEmailSend.Text = "SpamSend V2"
+        ToolTip1.SetToolTip(btnInternalEmailSend, "SpamSend V1")
+        btnInternalEmailSend.UseVisualStyleBackColor = False
+        ' 
+        ' btnStopAll
+        ' 
+        btnStopAll.BackColor = Color.Maroon
+        btnStopAll.BackgroundImageLayout = ImageLayout.Center
+        btnStopAll.Cursor = Cursors.Hand
+        btnStopAll.Font = New Font("Verdana", 9.75F, FontStyle.Bold, GraphicsUnit.Point)
+        btnStopAll.ForeColor = SystemColors.ControlLightLight
+        btnStopAll.Location = New Point(11, 393)
+        btnStopAll.Name = "btnStopAll"
+        btnStopAll.Size = New Size(190, 43)
+        btnStopAll.TabIndex = 112
+        btnStopAll.Text = "Stop All"
+        ToolTip1.SetToolTip(btnStopAll, "Stop ALL Attacks")
+        btnStopAll.UseVisualStyleBackColor = False
         ' 
         ' txtVerificationResults
         ' 
@@ -401,30 +472,6 @@ Partial Class frmMain
         txtVerificationResults.TabIndex = 1
         txtVerificationResults.Text = resources.GetString("txtVerificationResults.Text")
         ' 
-        ' lblIPAddress
-        ' 
-        lblIPAddress.AutoSize = True
-        lblIPAddress.BackColor = Color.FromArgb(CByte(18), CByte(18), CByte(18))
-        lblIPAddress.ForeColor = SystemColors.ControlLightLight
-        lblIPAddress.Location = New Point(79, 592)
-        lblIPAddress.Name = "lblIPAddress"
-        lblIPAddress.Size = New Size(88, 15)
-        lblIPAddress.TabIndex = 100
-        lblIPAddress.Text = "000.000.000.000"
-        lblIPAddress.TextAlign = Drawing.ContentAlignment.MiddleCenter
-        ' 
-        ' Label3
-        ' 
-        Label3.AutoSize = True
-        Label3.BackColor = Color.FromArgb(CByte(18), CByte(18), CByte(18))
-        Label3.ForeColor = SystemColors.ControlLightLight
-        Label3.Location = New Point(53, 592)
-        Label3.Name = "Label3"
-        Label3.Size = New Size(30, 15)
-        Label3.TabIndex = 102
-        Label3.Text = "You:"
-        Label3.TextAlign = Drawing.ContentAlignment.MiddleCenter
-        ' 
         ' Label4
         ' 
         Label4.AutoSize = True
@@ -434,17 +481,59 @@ Partial Class frmMain
         Label4.Name = "Label4"
         Label4.Size = New Size(198, 18)
         Label4.TabIndex = 103
-        Label4.Text = "Select a Cellular Provider:"' 
+        Label4.Text = "Select a Cellular Provider:"
+        ' 
+        ' lblProxy
+        ' 
+        lblProxy.AutoSize = True
+        lblProxy.BackColor = Color.FromArgb(CByte(18), CByte(18), CByte(18))
+        lblProxy.ForeColor = SystemColors.ControlLightLight
+        lblProxy.Location = New Point(12, 587)
+        lblProxy.Name = "lblProxy"
+        lblProxy.Size = New Size(91, 15)
+        lblProxy.TabIndex = 107
+        lblProxy.Text = "Proxy: waiting..."
+        lblProxy.TextAlign = Drawing.ContentAlignment.MiddleCenter
+        ' 
+        ' lblCountryCode
+        ' 
+        lblCountryCode.AutoSize = True
+        lblCountryCode.BackColor = Color.FromArgb(CByte(18), CByte(18), CByte(18))
+        lblCountryCode.ForeColor = SystemColors.ControlLightLight
+        lblCountryCode.Location = New Point(12, 606)
+        lblCountryCode.Name = "lblCountryCode"
+        lblCountryCode.Size = New Size(104, 15)
+        lblCountryCode.TabIndex = 108
+        lblCountryCode.Text = "Country: waiting..."
+        lblCountryCode.TextAlign = Drawing.ContentAlignment.MiddleCenter
+        ' 
+        ' lblVPN
+        ' 
+        lblVPN.AutoSize = True
+        lblVPN.BackColor = Color.FromArgb(CByte(18), CByte(18), CByte(18))
+        lblVPN.ForeColor = SystemColors.ControlLightLight
+        lblVPN.Location = New Point(12, 550)
+        lblVPN.Name = "lblVPN"
+        lblVPN.Size = New Size(84, 15)
+        lblVPN.TabIndex = 109
+        lblVPN.Text = "VPN: waiting..."
+        lblVPN.TextAlign = Drawing.ContentAlignment.MiddleCenter
+        ' 
         ' frmMain
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.FromArgb(CByte(30), CByte(30), CByte(30))
-        ClientSize = New Size(1108, 624)
-        Controls.Add(Label4)
+        ClientSize = New Size(1108, 630)
+        Controls.Add(btnStopAll)
+        Controls.Add(btnInternalEmailSend)
         Controls.Add(Label3)
+        Controls.Add(lblVPN)
+        Controls.Add(lblRegion)
+        Controls.Add(Label4)
+        Controls.Add(lblCountryCode)
+        Controls.Add(lblProxy)
         Controls.Add(btnEmailValidation)
-        Controls.Add(lblIPAddress)
         Controls.Add(txtOutgoingMessages)
         Controls.Add(btnClose)
         Controls.Add(Label1)
@@ -509,8 +598,13 @@ Partial Class frmMain
     Friend WithEvents btnMailbaitSubmit As Button
     Friend WithEvents txtOpenTabs As TextBox
     Friend WithEvents Label1 As Label
-    Friend WithEvents lblIPAddress As Label
     Friend WithEvents btnEmailValidation As Button
-    Friend WithEvents Label3 As Label
     Friend WithEvents Label4 As Label
+    Friend WithEvents lblRegion As Label
+    Friend WithEvents lblProxy As Label
+    Friend WithEvents lblCountryCode As Label
+    Friend WithEvents lblVPN As Label
+    Friend WithEvents Label3 As Label
+    Friend WithEvents btnInternalEmailSend As Button
+    Friend WithEvents btnStopAll As Button
 End Class
